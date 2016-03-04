@@ -4,6 +4,8 @@
 # sbt specific
 dist/*
 target/
+# NB : écrire "target/" ignore aussi les dossiers target/ dans les sous-projets,
+# n'importe où dans l'arborescence
 lib_managed/
 src_managed/
 project/boot/

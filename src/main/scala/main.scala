@@ -27,8 +27,6 @@ object TutorialApp extends JSApp {
 		val flag = "member"
 		val offset = 17 // commencer à compter à partir de 0
 		val possibleCompletions = Compiler.autocomplete(exampleCode, flag, offset)
-		println(possibleCompletions)
 		println(possibleCompletions.value)
-		println()
 	}
 }
