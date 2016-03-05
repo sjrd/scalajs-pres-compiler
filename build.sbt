@@ -22,14 +22,21 @@ lazy val scalaCompilerJS = (project in file("sjs-compiler")).
 	settings(
 		name := "Scala compiler JS",
 		libraryDependencies ++= Seq(
-  		"org.apache.ant" % "ant" % "1.9.6",
-  		"org.scala-lang.modules" % "scala-asm" % "latest.integration"
-  	)
+			"org.apache.ant" % "ant" % "1.9.6",
+			"org.scala-lang.modules" % "scala-asm" % "latest.integration"
+		)
+	)
+
+lazy val nscToolsInteractive = (project in file("sjs-nsc-interactive")).
+	dependsOn(scalaReflectJS, scalaCompilerJS).
+	settings(commonSettings: _*).
+	settings(
+		name := "nsc tools interactive"
 	)
 
 lazy val root = (project in file(".")).
 	aggregate(scalaReflectJS, scalaCompilerJS).
-	dependsOn(scalaCompilerJS).
+	dependsOn(scalaCompilerJS, nscToolsInteractive).
 	settings(commonSettings: _*).
 	settings(
 		name := "Scala.js presentation compiler",
