@@ -1,6 +1,9 @@
 import scala.scalajs.js.JSApp
 import fiddle.Classpath
 import fiddle.Compiler
+import scala.concurrent._
+import ExecutionContext.Implicits.global
+import scala.util.{Success, Failure}
 
 /* Code copié depuis Client.scala
 def complete() = async {
@@ -26,7 +29,11 @@ object TutorialApp extends JSApp {
 		val exampleCode = """var x: Int = 0; x"""
 		val flag = "member"
 		val offset = 17 // commencer à compter à partir de 0
-		val possibleCompletions = Compiler.autocomplete(exampleCode, flag, offset)
-		println(possibleCompletions.value)
+		val future = Compiler.autocomplete(exampleCode, flag, offset)
+		
+		future onComplete {
+			case Success(possibleCompletions) => for (c <- possibleCompletions) println(c)
+			case Failure(t) => println("An error has occured : " + t.getMessage)
+		}
 	}
 }
