@@ -33,7 +33,7 @@ object TutorialApp extends JSApp {
 		
 		future onComplete {
 			case Success(possibleCompletions) => for (c <- possibleCompletions) println(c)
-			case Failure(t) => println("An error has occured : " + t.getMessage)
+			case Failure(t) => t.printStackTrace
 		}
 	}
 }

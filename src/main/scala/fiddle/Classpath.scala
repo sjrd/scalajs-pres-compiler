@@ -1,6 +1,6 @@
 package fiddle
 
-import acyclic.file
+// import acyclic.file
 import scala.reflect.io.{VirtualDirectory, Streamable}
 import java.util.zip.ZipInputStream
 import java.io._
