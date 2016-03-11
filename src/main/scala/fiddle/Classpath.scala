@@ -1,10 +1,11 @@
 package fiddle
 
-// import acyclic.file
-import scala.reflect.io.{VirtualDirectory, Streamable}
+import scala.reflect.io.{VirtualDirectory, Streamable, Path}
 import java.util.zip.ZipInputStream
 import java.io._
-
+import scala.scalajs.js
+import js.Dynamic.global
+import js.DynamicImplicits._
 // import org.scalajs.core.tools.classpath.builder.{AbstractJarLibClasspathBuilder, PartialClasspathBuilder, JarTraverser}
 // import org.scalajs.core.tools.io._
 import scala.collection.immutable.Traversable
@@ -25,30 +26,26 @@ object Classpath {
     println("Loading files...")
     val jarFiles = for {
       name <- Seq(
-        "/scala-library-2.11.5.jar",
-        "/scala-reflect-2.11.5.jar",
-        "/scalajs-library_2.11-0.6.0.jar",
-        "/scalajs-dom_sjs0.6_2.11-0.8.0.jar",
-        "/scalatags_sjs0.6_2.11-0.4.5.jar",
-        "/scalarx_sjs0.6_2.11-0.2.7.jar",
-        "/scala-async_2.11-0.9.1.jar",
-        "/scalaxy-loops_2.11-0.1.1.jar",
-        "/runtime_sjs0.6_2.11-0.1-SNAPSHOT.jar",
-        "/page_sjs0.6_2.11-0.1-SNAPSHOT.jar",
-        "/shared_sjs0.6_2.11-0.1-SNAPSHOT.jar"
+        "C:/Users/Roger/Projet_II/scala-library-2.11.7.jar",
+        "C:/Users/Roger/Projet_II/scalajs-library_2.11-0.6.7"
       )
     } yield {
-      val stream = getClass.getResourceAsStream(name)
-      println("Loading file" + name + ": " + stream)
-      if (stream == null) {
-        throw new Exception(s"Classpath loading failed, jar $name not found")
-      }
-      name -> Streamable.bytes(stream)
+      val fs = global.require("fs")
+      val file = fs.readFileSync(name).asInstanceOf[InputStream]
+//      val stream = getClass.getResourceAsStream(name)
+//      println("Loading file" + name + ": " + stream)
+//      if (stream == null) {
+//        throw new Exception(s"Classpath loading failed, jar $name not found")
+//      }
+      name -> Streamable.bytes(file)
     }
-
+    
+    val paths = List("C:/Program Files/Java/jre1.8.0_74/lib/rt.jar")
     val bootFiles = for {
-      prop <- Seq(/*"java.class.path", */"sun.boot.class.path")
-      path <- System.getProperty(prop).split(System.getProperty("path.separator"))
+      // les System properties ne sont pas accessibles par Scala.js 
+//      prop <- Seq(/*"java.class.path", */"sun.boot.class.path")
+//      path <- System.getProperty(prop).split(System.getProperty("path.separator"))
+    	path <- paths
       vfile = scala.reflect.io.File(path)
       if vfile.exists && !vfile.isDirectory
     } yield {
