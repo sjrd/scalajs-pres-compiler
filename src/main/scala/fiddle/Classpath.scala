@@ -26,18 +26,19 @@ object Classpath {
     println("Loading files...")
     val jarFiles = for {
       name <- Seq(
-        "C:/Users/Roger/Projet_II/scala-library-2.11.7.jar",
-        "C:/Users/Roger/Projet_II/scalajs-library_2.11-0.6.7"
+          "/home/roger/EPFL-MA/Projet_II/scala-library-2.11.7.jar",
+          "/home/roger/EPFL-MA/Projet_II/scalajs-library_2.11-0.6.7.jar"
+//        "C:/Users/Roger/Projet_II/scala-library-2.11.7.jar",
+//        "C:/Users/Roger/Projet_II/scalajs-library_2.11-0.6.7.jar"
       )
     } yield {
       val fs = global.require("fs")
-      val file = fs.readFileSync(name).asInstanceOf[InputStream]
-//      val stream = getClass.getResourceAsStream(name)
-//      println("Loading file" + name + ": " + stream)
-//      if (stream == null) {
-//        throw new Exception(s"Classpath loading failed, jar $name not found")
-//      }
-      name -> Streamable.bytes(file)
+      // readFileSync returns a Node.js Buffer when encoding is not specified
+      val file = fs.readFileSync(name)
+      val bytes = Array[Byte]() // problem : how to fill it ? Buffer has lots of read methods, which one to use ?
+      println(file.length) // this gives the correct size
+      val byteIS = new ByteArrayInputStream(bytes)
+      name -> Streamable.bytes(byteIS)
     }
     
     val paths = List("C:/Program Files/Java/jre1.8.0_74/lib/rt.jar")
