@@ -10,6 +10,7 @@ import js.DynamicImplicits._
 // import org.scalajs.core.tools.io._
 import scala.collection.immutable.Traversable
 import scala.util.Random
+import scala.scalajs.js.typedarray.{Uint8Array, Int8Array, ArrayBufferInputStream}
 
 /**
  * Loads the jars that make up the classpath of the scala-js-fiddle
@@ -24,6 +25,7 @@ object Classpath {
    */
   lazy val loadedFiles = {
     println("Loading files...")
+    val fs = global.require("fs")
     val jarFiles = for {
       name <- Seq(
           "/home/roger/EPFL-MA/Projet_II/scala-library-2.11.7.jar",
@@ -32,16 +34,16 @@ object Classpath {
 //        "C:/Users/Roger/Projet_II/scalajs-library_2.11-0.6.7.jar"
       )
     } yield {
-      val fs = global.require("fs")
       // readFileSync returns a Node.js Buffer when encoding is not specified
       val file = fs.readFileSync(name)
-      val bytes = Array[Byte]() // problem : how to fill it ? Buffer has lots of read methods, which one to use ?
       println(file.length) // this gives the correct size
-      val byteIS = new ByteArrayInputStream(bytes)
-      name -> Streamable.bytes(byteIS)
+      val buffer = new Uint8Array(fs.readFileSync(name).asInstanceOf[js.Array[Int]]).buffer
+      val inputStream: InputStream = new ArrayBufferInputStream(buffer)
+      name -> Streamable.bytes(inputStream)
     }
     
-    val paths = List("C:/Program Files/Java/jre1.8.0_74/lib/rt.jar")
+//    val paths = List("C:/Program Files/Java/jre1.8.0_74/lib/rt.jar")
+    val paths = List("/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.72-9.b16.fc23.x86_64/jre/lib/rt.jar")
     val bootFiles = for {
       // les System properties ne sont pas accessibles par Scala.js 
 //      prop <- Seq(/*"java.class.path", */"sun.boot.class.path")
@@ -84,41 +86,5 @@ object Classpath {
     println(dir.size)
     dir
   }
-  /**
-   * The loaded files shaped for Scala-Js-Tools to use
-   */
-  // lazy val scalajs = {
-  //   println("Loading scalaJSClassPath")
-  //   class Builder extends AbstractJarLibClasspathBuilder{
-  //     val DummyVersion = "DUMMY_FILE"
-  //     def listFiles(d: File) = Nil
-  //     def toJSFile(f: File) = {
-  //       val file = new MemVirtualJSFile(f._1)
-  //       file.content = new String(f._2)
-  //       file
-  //     }
-  //     def toIRFile(f: File) = {
-  //       val file = new MemVirtualSerializedScalaJSIRFile(f._1)
-  //       file.content = f._2
-  //       file
-  //     }
-  //     def isDirectory(f: File) = false
-  //     type File = (String, Array[Byte])
-  //     def toInputStream(f: File) = new ByteArrayInputStream(f._2)
-  //     def isFile(f: File) = true
-  //     def isJSFile(f: File) = f._1.endsWith(".js")
-  //     def isJARFile(f: File) = f._1.endsWith(".jar")
-  //     def exists(f: File) = true
-  //     def getName(f: File) = f._1
-  //     def isIRFile(f: File) = f._1.endsWith(".sjsir")
-  //     def getVersion(f: File) = Random.nextInt().toString
-  //     def getAbsolutePath(f: File) = f._1
-  //     def toReader(f: File) = new InputStreamReader(toInputStream(f))
-  //   }
 
-  //   val res = loadedFiles.map(new Builder().build(_))
-  //                        .reduceLeft(_ merge _)
-  //   println("Loaded scalaJSClassPath")
-  //   res
-  // }
 }

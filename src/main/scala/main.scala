@@ -4,6 +4,8 @@ import fiddle.Compiler
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import scala.util.{Success, Failure}
+import scala.scalajs.js
+import js.Dynamic.{global => g}
 
 /* Code copié depuis Client.scala
 def complete() = async {
@@ -26,6 +28,7 @@ def complete() = async {
 object TutorialApp extends JSApp {
 	def main(): Unit = {
 		println("Hello world!")
+		g.require("source-map-support")
 		val exampleCode = """var x: Int = 0; x"""
 		val flag = "member"
 		val offset = 17 // commencer à compter à partir de 0

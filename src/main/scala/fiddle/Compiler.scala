@@ -137,7 +137,7 @@ object Compiler {
 		val reloadFuture = toFuture[Unit](compiler.askReload(List(file), _))
 
 		val compilerMembersFuture = reloadFuture flatMap {
-			Unit =>
+			_ =>
 				{
 
 					toFuture[List[compiler.Member]](flag match {
