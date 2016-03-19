@@ -4,7 +4,6 @@ import scala.tools.nsc.Settings
 import scala.reflect.io
 import scala.tools.nsc.util._
 import java.io._
-import akka.util.ByteString
 import scala.tools.nsc.reporters.ConsoleReporter
 import scala.tools.nsc.plugins.Plugin
 import scala.concurrent.Future
@@ -101,14 +100,23 @@ object Compiler {
 		lazy val settings = new Settings
 
 		settings.outputDirs.setSingleOutput(vd)
+		
+		/* java.io.Writer is an abstract class, "new Writer {...}" is a shortcut to create an anonymous class that
+		 * extends the abstract class and instantiate it in one step :
+		 * http://stackoverflow.com/questions/16259168/how-does-curly-braces-following-trait-instantiation-work/16259734
+		 * http://stackoverflow.com/questions/9762338/scala-abstract-classes-instantiation
+		 */
 		val writer = new Writer {
-			var inner = ByteString()
+		  var inner = new StringWriter
 			def write(cbuf: Array[Char], off: Int, len: Int): Unit = {
-				inner = inner ++ ByteString.fromArray(cbuf.map(_.toByte), off, len)
+		    inner.append(cbuf, off, off + len + 1)
+		    // +1 because end = the index of the character following the last character in the subsequence
+        // len is the number of chars to write including the char starting at the off
+        // before : inner = inner ++ ByteString.fromArray(cbuf.map(_.toByte), off, len)
 			}
 			def flush(): Unit = {
-				logger(inner.utf8String)
-				inner = ByteString()
+			  logger(inner.toString)
+			  inner = new StringWriter
 			}
 			def close(): Unit = ()
 		}
