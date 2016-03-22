@@ -43,8 +43,10 @@ lazy val root = (project in file(".")).
 		name := "Scala.js presentation compiler",
 		version := "1.0",
 		scalaJSUseRhino in Global := false,
-		libraryDependencies += "org.scala-js" %% "scalajs-javalib-ex" % scalaJSVersion
-		// libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.4.2"
+		libraryDependencies += "org.scala-js" %% "scalajs-javalib-ex" % scalaJSVersion,
+		libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0-M15" % "test"
+		// latest.release
+		// https://ant.apache.org/ivy/history/2.3.0/ivyfile/dependency.html#revision
 	)
 	
 scalaJSOptimizerOptions ~= { _.withBypassLinkingErrors(true) }
