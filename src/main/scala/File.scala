@@ -15,10 +15,10 @@ class File(pathname: String) {
 	def this(parent: String, child: String) {
 		this(parent + File.separator + child)
 	}
-	
+
 	private def removeExtraneousSeparators(path: String) = {
 		val temp = path split(File.separator) filterNot(_ == "") mkString(File.separator)
-		if (temp endsWith(File.separator)) temp dropRight(1) else temp
+		if (path startsWith(File.separator)) File.separator + temp else temp
 	}
 	
 	// https://github.com/nodejs/node/issues/1592#issuecomment-98392899

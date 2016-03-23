@@ -44,7 +44,7 @@ lazy val root = (project in file(".")).
 		version := "1.0",
 		scalaJSUseRhino in Global := false,
 		libraryDependencies += "org.scala-js" %% "scalajs-javalib-ex" % scalaJSVersion,
-		libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0-M15" % "test"
+		libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0-M15" % "test"
 		// latest.release
 		// https://ant.apache.org/ivy/history/2.3.0/ivyfile/dependency.html#revision
 	)
