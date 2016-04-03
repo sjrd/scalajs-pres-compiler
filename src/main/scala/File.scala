@@ -4,16 +4,25 @@ import scala.scalajs.js
 import js.Dynamic.global
 import js.DynamicImplicits._
 
+
+
 class File(pathname: String) {
 
 	private val path = removeExtraneousSeparators(pathname)
 
 	def this(parent: File, child: String) {
 		this(parent.getPath + File.separator + child)
+		println("Parent File child String constructor called")
 	}
 
 	def this(parent: String, child: String) {
 		this(parent + File.separator + child)
+		println("Parent String child String constructor called")
+	}
+
+	def this(uri: File.URI) {
+		this("")
+		println("URI constructor called")
 	}
 
 	private def removeExtraneousSeparators(path: String) = {
@@ -58,12 +67,24 @@ class File(pathname: String) {
 			case e: Exception => false
 		}
 	}
+
+	def length: Long = {
+		try {
+			val fd = File.nFileSystem.openSync(path, 'r')
+			val stats = File.nFileSystem.fstatSync(fd)
+			println(stats.size)
+			stats.size.asInstanceOf[Int].toLong
+		} catch {
+			case e: Exception => 0L
+		}
+	}
 		
 	override def toString = path
 }
 
 object File {
-
+	
+	class URI(uri: String)
 	private val nFileSystem = global.require("fs")
 	private val nPath = global.require("path")
 	val pathSeparator: String = nPath.delimiter.asInstanceOf[String]
