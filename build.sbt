@@ -43,6 +43,7 @@ lazy val root = (project in file(".")).
 		name := "Scala.js presentation compiler",
 		version := "1.0",
 		scalaJSUseRhino in Global := false,
+		jsEnv := NodeJSEnv(args = Seq("--stack-size=8192")).value,
 		libraryDependencies += "org.scala-js" %% "scalajs-javalib-ex" % scalaJSVersion,
 		libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0-M15" % "test"
 		// latest.release

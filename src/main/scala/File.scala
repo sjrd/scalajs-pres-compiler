@@ -12,7 +12,7 @@ class File(pathname: String) {
 
 	def this(parent: File, child: String) {
 		this(parent.getPath + File.separator + child)
-		println("Parent File child String constructor called")
+		println(s"Parent File child String constructor called : parent.getPath = ${parent.getPath}, child = $child")
 	}
 
 	def this(parent: String, child: String) {
@@ -50,12 +50,16 @@ class File(pathname: String) {
 	
 	def getPath = path
 	
+	def isAbsolute = {
+		path startsWith File.separator
+	}
+	
 	def isDirectory = {
+		println(s"isDirectory : path = $path")
 		try {
-			val fd = File.nFileSystem.openSync(path, 'r')
-			File.nFileSystem.fstatSync(fd).isDirectory().asInstanceOf[Boolean]
+			File.nFileSystem.lstatSync(path).isDirectory().asInstanceOf[Boolean]
 		} catch {
-			case e: Exception => false
+			case e: Exception => println(s"isDirectory exception getCause : ${e.getCause}"); false
 		}
 	}
 	

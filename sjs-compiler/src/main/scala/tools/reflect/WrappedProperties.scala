@@ -27,33 +27,18 @@ trait WrappedProperties extends PropertiesTrait {
 	protected def propCategory = "wrapped"
 	protected def pickJarBasedOn = this.getClass // comment in PropertiesTrait : props file comes from jar containing this
 	
+	/*
+	 * There is a getResourceAsStream in scala.util.PropertiesTrait, which does not work
+	 * with Scala.js. Therefore we override the scalaProps val containing the
+	 * getResourceAsStream call, and simply return an empty java.util.Properties
+	 */
 	override protected lazy val scalaProps: java.util.Properties = {
-		val props = new java.util.Properties
-		
-		// this might be used to get the filesystem path to the JAR containing this
-		// but even more things are missing : getProtectionDomain is not a function, ...
-//		val src: CodeSource = pickJarBasedOn.getProtectionDomain().getCodeSource();
-//  	val jar: URL = src.getLocation();
-//		val path = URLDecoder.decode(jar.getPath, "UTF-8");
-		
-		// and even if we manage to read the jar, how do we get the properties(?) inside it ?
-		
-		val fs = global.require("fs")
-		val buffer = new Uint8Array(fs.readFileSync(propFilename).asInstanceOf[js.Array[Int]]).buffer
-		val stream: InputStream = new ArrayBufferInputStream(buffer)
-
-		if (stream ne null)
-			quietlyDispose(props load stream, stream.close)
-
-		props
-	}
-
-	private def quietlyDispose(action: => Unit, disposal: => Unit) =
-		try { action }
-		finally {
-			try { disposal }
-			catch { case _: IOException => }
-		}
+  	val props = new java.util.Properties
+  	props.setProperty("version.number", "2.11.7") /* does not seem to do anything later on, hardcoded version
+  	* 2.11.7 in tools.nsc.settings.ScalaVersion.scala, line 119, instead
+  	*/
+  	props
+  }
 
 	override def propIsSet(name: String) = wrap(super.propIsSet(name)) exists (x => x)
 	override def propOrElse(name: String, alt: String) = wrap(super.propOrElse(name, alt)) getOrElse alt
