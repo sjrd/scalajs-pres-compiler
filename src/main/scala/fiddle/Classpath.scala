@@ -29,7 +29,7 @@ object Classpath {
     val jarFiles = for {
       name <- Seq(
           "/home/roger/EPFL-MA/Projet_II/scala-library-2.11.7.jar",
-          "/home/roger/EPFL-MA/Projet_II/scalajs-library_2.11-0.6.7.jar"
+          "/home/roger/EPFL-MA/Projet_II/scalajs-library_2.11-0.6.8.jar"
 //        "C:/Users/Roger/Projet_II/scala-library-2.11.7.jar",
 //        "C:/Users/Roger/Projet_II/scalajs-library_2.11-0.6.7.jar"
       )
@@ -43,7 +43,8 @@ object Classpath {
     }
     
 //    val paths = List("C:/Program Files/Java/jre1.8.0_74/lib/rt.jar")
-    val paths = List("/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.77-1.b03.fc23.x86_64/jre/lib/rt.jar")
+// /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.77-1.b03.fc23.x86_64/jre/lib/rt.jar
+    val paths = List("/home/roger/EPFL-MA/Projet_II/rt.jar")
     val bootFiles = for {
       // les System properties ne sont pas accessibles par Scala.js 
 //      prop <- Seq(/*"java.class.path", */"sun.boot.class.path")
