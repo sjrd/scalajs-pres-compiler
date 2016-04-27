@@ -128,6 +128,7 @@ object Compiler {
 	def autocomplete(code: String, flag: String, pos: Int): Future[List[(String, String)]] = {
 		// global can be reused, just create new runs for new compiler invocations
 		val (settings, reporter, vd, jCtx, jDirs) = initGlobalBits(_ => ())
+		println("autocomplete before compiler val")
 		val compiler = new nsc.interactive.Global(settings, reporter) with InMemoryGlobal { g =>
 			def ctx = jCtx
 			def dirs = jDirs
@@ -138,6 +139,7 @@ object Compiler {
 				override def findMacroClassLoader() = cl
 			}
 		}
+		println("autocomplete after compiler val")
 
 		val file = new BatchSourceFile(makeFile(Shared.prelude.getBytes ++ code.getBytes), Shared.prelude + code)
 		val position = new OffsetPosition(file, pos + Shared.prelude.length)

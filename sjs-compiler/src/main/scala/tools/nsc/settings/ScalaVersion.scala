@@ -117,7 +117,7 @@ object ScalaVersion {
    * The version of the compiler running now
    */
   val current = apply("2.11.7")//util.Properties.versionNumberString)
-
+  println("tools.nsc.settings version")
   /**
    * The 2.8.0 version.
    */
