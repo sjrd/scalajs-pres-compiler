@@ -30,7 +30,7 @@ trait ScalaSettings extends AbsScalaSettings
    *  - Otherwise, if CLASSPATH is set, it is that
    *  - If neither of those, then "." is used.
    */
-  protected def defaultClasspath = sys.env.getOrElse("CLASSPATH", ".")
+  protected def defaultClasspath = "." //sys.env.getOrElse("CLASSPATH", ".")
 
   /** Enabled under -Xexperimental. */
   protected def experimentalSettings = List[BooleanSetting](YmethodInfer, overrideObjects, overrideVars)

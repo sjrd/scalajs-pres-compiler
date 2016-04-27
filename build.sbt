@@ -45,7 +45,8 @@ lazy val root = (project in file(".")).
 		scalaJSUseRhino in Global := false,
 		jsEnv := NodeJSEnv(args = Seq("--stack-size=8192")).value,
 		libraryDependencies += "org.scala-js" %% "scalajs-javalib-ex" % scalaJSVersion,
-		libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0-M15" % "test"
+		libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0-M15" % "test",
+		scalaJSSemantics ~= { _.withModuleInit(org.scalajs.core.tools.sem.CheckedBehavior.Compliant) }
 		// libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "latest.release"
 		// "latest.release"
 		// https://ant.apache.org/ivy/history/2.3.0/ivyfile/dependency.html#revision
