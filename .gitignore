@@ -22,7 +22,6 @@ project/plugins/project/
 bin/
 
 node_modules/
-/src/test/
 
 misc
 plugins
