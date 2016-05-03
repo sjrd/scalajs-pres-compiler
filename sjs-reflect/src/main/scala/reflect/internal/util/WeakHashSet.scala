@@ -95,7 +95,7 @@ final class WeakHashSet[A <: AnyRef](val initialCapacity: Int, val loadFactor: D
    * remove entries associated with elements that have been gc'ed
    */
   private[this] def removeStaleEntries() {
-    def poll(): Entry[A] = queue.poll().asInstanceOf[Entry[A]]
+    def poll(): Entry[A] = null//queue.poll().asInstanceOf[Entry[A]]
 
     @tailrec
     def queueLoop(): Unit = {
