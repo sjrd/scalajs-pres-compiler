@@ -233,7 +233,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		override lazy val analyzer = new {
 			val global: Global.this.type = Global.this
 		} with InteractiveAnalyzer
-		
+		println("after lazy val analyzer Global")
 		private def cleanAllResponses() {
 			cleanResponses(waitLoadedTypeResponses)
 			cleanResponses(getParsedEnteredResponses)
@@ -297,8 +297,9 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 
 		/** The currently active typer run */
 		private var currentTyperRun: TyperRun = _
+		println("before new TyperRun")
 		newTyperRun()
-
+		println("after new TyperRun")
 		/** Is a background compiler run needed?
 		 *  Note: outOfDate is true as long as there is a background compile scheduled or going on.
 		 */
@@ -382,7 +383,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		/** The top level classes and objects currently seen in the presentation compiler
 		 */
 		private val currentTopLevelSyms = new mutable.LinkedHashSet[Symbol]
-
+		println("after currentTopLevelSyms")
 		/** The top level classes and objects no longer seen in the presentation compiler
 		 */
 		val deletedTopLevelSyms = new mutable.LinkedHashSet[Symbol] with mutable.SynchronizedSet[Symbol]
@@ -1101,7 +1102,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 			debugLog("typeMembers at "+tree+" "+tree.tpe)
 			val superAccess = tree.isInstanceOf[Super]
 			val members = new Members[TypeMember]
-
+			println("after val members")
 			def addTypeMember(sym: Symbol, pre: Type, inherited: Boolean, viaView: Symbol) = {
 				val implicitlyAdded = viaView != NoSymbol
 				members.add(sym, pre, implicitlyAdded) { (s, st) =>
@@ -1320,7 +1321,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		/** The typer run */
 		class TyperRun extends Run {
 			// units is always empty
-
+			println("in class TyperRun")
 			/** canRedefine is used to detect double declarations of classes and objects
 			 *  in multiple source files.
 			 *  Since the IDE rechecks units several times in the same run, these tests

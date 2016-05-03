@@ -47,7 +47,7 @@ class Global(var currentSettings: Settings, var reporter: Reporter)
     with Positions
     with Reporting
     with Parsing { self =>
-
+  println("Global in compiler tools.nsc")
   // the mirror --------------------------------------------------
 
   override def isCompilerUniverse = true
@@ -57,6 +57,7 @@ class Global(var currentSettings: Settings, var reporter: Reporter)
   implicit val RuntimeClassTag: ClassTag[RuntimeClass] = ClassTag[RuntimeClass](classOf[RuntimeClass])
 
   class GlobalMirror extends Roots(NoSymbol) {
+    println("GlobalMirror extends Roots")
     val universe: self.type = self
     def rootLoader: LazyType = {
       settings.YclasspathImpl.value match {
@@ -65,6 +66,7 @@ class Global(var currentSettings: Settings, var reporter: Reporter)
       }
     }
     override def toString = "compiler mirror"
+    println("end of GlobalMirror")
   }
   implicit val MirrorTag: ClassTag[Mirror] = ClassTag[Mirror](classOf[GlobalMirror])
 
@@ -73,6 +75,7 @@ class Global(var currentSettings: Settings, var reporter: Reporter)
     rm.init()
     rm.asInstanceOf[Mirror]
   }
+
   def RootClass: ClassSymbol = rootMirror.RootClass
   def EmptyPackageClass: ClassSymbol = rootMirror.EmptyPackageClass
 
@@ -1142,6 +1145,7 @@ class Global(var currentSettings: Settings, var reporter: Reporter)
   /** A Run is a single execution of the compiler on a set of units.
    */
   class Run extends RunContextApi with RunReporting with RunParsing {
+    println("class Run in sjs-compiler begin")
     /** Have been running into too many init order issues with Run
      *  during erroneous conditions.  Moved all these vals up to the
      *  top of the file so at least they're not trivially null.
@@ -1200,21 +1204,25 @@ class Global(var currentSettings: Settings, var reporter: Reporter)
                 => xs.last
       }
     }
+    println("after lazy val stopPhaseSetting")
     /** Should we stop right before entering the given phase? */
     protected def stopPhase(name: String) = stopPhaseSetting exists (_.phaseName == name)
     /** Should we skip the given phase? */
     protected def skipPhase(name: String) = settings.skip contains name
-
+    println("before firstPhase")
     private val firstPhase = {
       // Initialization.  definitions.init requires phase != NoPhase
       import scala.reflect.internal.SomePhase
       curRunId += 1
       curRun = this
       phase = SomePhase
+      println("before phaseWithId")
       phaseWithId(phase.id) = phase
+      println("before def init")
       definitions.init()
 
       // the components to use, omitting those named by -Yskip and stopping at the -Ystop phase
+      println("before components")
       val components = {
         // stop on a dime, but this test fails if pd is after the stop phase
         def unstoppable(pd: SubComponent) = {
@@ -1241,6 +1249,7 @@ class Global(var currentSettings: Settings, var reporter: Reporter)
           phs :+ t
         } else phs
       }
+      println("after components")
       // Create phases and link them together. We supply the previous, and the ctor sets prev.next.
       val last  = components.foldLeft(NoPhase: Phase)((prev, c) => c newPhase prev)
       // rewind (Iterator.iterate(last)(_.prev) dropWhile (_.prev ne NoPhase)).next
@@ -1277,6 +1286,7 @@ class Global(var currentSettings: Settings, var reporter: Reporter)
       phase = first   //parserPhase
       first
     }
+    println("after val firstPhase")
 
     // --------------- Miscellania -------------------------------
 

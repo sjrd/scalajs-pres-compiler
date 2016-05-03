@@ -15,7 +15,7 @@ import scala.reflect.api.{Universe => ApiUniverse}
 
 trait Definitions extends api.StandardDefinitions {
   self: SymbolTable =>
-
+  println("trait Definitions in reflect internal Definitions")
   import rootMirror.{getModuleByName, getPackage, getClassByName, getRequiredClass, getRequiredModule, getClassIfDefined, getModuleIfDefined, getPackageObject, getPackageIfDefined, getPackageObjectIfDefined, requiredClass, requiredModule}
 
   object definitions extends DefinitionsClass
@@ -254,8 +254,11 @@ trait Definitions extends api.StandardDefinitions {
     // top types
     lazy val AnyClass    = enterNewClass(ScalaPackageClass, tpnme.Any, Nil, ABSTRACT) markAllCompleted
     lazy val AnyRefClass = newAlias(ScalaPackageClass, tpnme.AnyRef, ObjectTpe) markAllCompleted
-    lazy val ObjectClass = getRequiredClass(sn.Object.toString)
-
+    lazy val ObjectClass = {
+      println("lazy val ObjectClass")
+      println(sn.Object.toString)
+      getRequiredClass(sn.Object.toString)
+    }
     // Cached types for core monomorphic classes
     lazy val AnyRefTpe       = AnyRefClass.tpe
     lazy val AnyTpe          = AnyClass.tpe
@@ -1390,12 +1393,16 @@ trait Definitions extends api.StandardDefinitions {
 
     // documented in JavaUniverse.init
     def init() {
+      println("init() in reflect.internal.Definitions")
       if (isInitialized) return
       ObjectClass.initialize
+      println("after ObjectClass.initialize")
       ScalaPackageClass.initialize
+      println("after ScalaPackageClass.initialize")
       val forced1 = symbolsNotPresentInBytecode
       val forced2 = NoSymbol
       isInitialized = true
+      println("end of init() in reflect.internal.Definitions")
     } //init
 
     class UniverseDependentTypes(universe: Tree) {

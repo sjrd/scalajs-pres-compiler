@@ -4,6 +4,7 @@ package util
 
 import scala.collection.{ mutable, immutable }
 import scala.language.postfixOps
+import scala.scalajs.js
 
 trait TraceSymbolActivity {
   val global: SymbolTable
@@ -24,12 +25,15 @@ trait TraceSymbolActivity {
   }
 
   def recordNewSymbol(sym: Symbol) {
+    assert(!js.isUndefined(sym))
     if (enabled && sym.id > 1) {
       allSymbols(sym.id) = sym
       allChildren(sym.owner.id) ::= sym.id
     }
   }
   def recordNewSymbolOwner(sym: Symbol, newOwner: Symbol) {
+    assert(!js.isUndefined(sym))
+    assert(!js.isUndefined(newOwner))
     if (enabled) {
       val sid = sym.id
       val oid = sym.owner.id

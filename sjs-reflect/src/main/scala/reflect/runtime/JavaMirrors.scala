@@ -21,12 +21,14 @@ import internal.Flags._
 import ReflectionUtils._
 import scala.language.existentials
 import scala.runtime.{ScalaRunTime, BoxesRunTime}
+import scala.scalajs.js
 
 private[scala] trait JavaMirrors extends internal.SymbolTable with api.JavaUniverse with TwoWayCaches { thisUniverse: SymbolTable =>
 
   private lazy val mirrors = new WeakHashMap[ClassLoader, WeakReference[JavaMirror]]()
 
   private def createMirror(owner: Symbol, cl: ClassLoader): Mirror = {
+    assert(!js.isUndefined(owner))
     val jm = new JavaMirror(owner, cl)
     mirrors(cl) = new WeakReference(jm)
     jm.init()
