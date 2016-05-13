@@ -125,7 +125,7 @@ trait Types
    *  It makes use of the fact that these two operations depend only on the parents,
    *  not on the refinement.
    */
-  private val _intersectionWitness = perRunCaches.newWeakMap[List[Type], WeakReference[Type]]()
+  private val _intersectionWitness = perRunCaches.newMap[List[Type], WeakReference[Type]]()
   def intersectionWitness = _intersectionWitness
 
   /** A proxy for a type (identified by field `underlying`) that forwards most
@@ -1386,7 +1386,7 @@ trait Types
         intersectionWitness(parents) = new WeakReference(this)
         op1
       }
-
+      
       intersectionWitness get parents match {
         case Some(ref) =>
           ref.get match {

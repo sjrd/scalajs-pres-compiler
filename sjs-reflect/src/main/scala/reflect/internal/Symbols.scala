@@ -41,9 +41,7 @@ trait Symbols extends api.Symbols { self: SymbolTable =>
 
 	// Set the fields which point companions at one another.  Returns the module.
 	def connectModuleToClass(m: ModuleSymbol, moduleClass: ClassSymbol): ModuleSymbol = {
-		println("connectModuleToClass")
 		moduleClass.sourceModule = m
-		println("avant setModuleClass")
 		m setModuleClass moduleClass
 		m
 	}

@@ -7,16 +7,19 @@ lazy val commonSettings = Seq(
 	// javaOptions in (Compile, run) += "-XX:+UseG1GC"
 )
 
+// lazy val scalaJSSnapshotPlugin = file("/home/roger/EPFL-MA/Projet_II/sbt-scalajs-0.6.10-SNAPSHOT.jar")
+
 lazy val scalaReflectJS = (project in file("sjs-reflect")).
-	enablePlugins(ScalaJSPlugin).
+	// dependsOn(scalaJSSnapshotPlugin).
+	enablePlugins(ScalaJSPlugin). 
 	settings(commonSettings: _*).
 	settings(
 		name := "Scala reflect JS"
 	)
 	
 lazy val scalaCompilerJS = (project in file("sjs-compiler")).
-	enablePlugins(ScalaJSPlugin).
 	dependsOn(scalaReflectJS).
+	enablePlugins(ScalaJSPlugin).
 	settings(commonSettings: _*).
 	settings(
 		name := "Scala compiler JS",

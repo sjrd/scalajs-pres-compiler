@@ -135,8 +135,8 @@ object Compiler {
 			override lazy val analyzer = new {
 				val global: g.type = g
 			} with InteractiveAnalyzer {
-				val cl = inMemClassloader
-				override def findMacroClassLoader() = cl
+				// val cl = inMemClassloader
+				// override def findMacroClassLoader() = cl
 			}
 		}
 		println("autocomplete after compiler val")

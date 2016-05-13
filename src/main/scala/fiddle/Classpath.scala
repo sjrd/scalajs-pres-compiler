@@ -29,7 +29,7 @@ object Classpath {
     val jarFiles = for {
       name <- Seq(
           "/home/roger/EPFL-MA/Projet_II/scala-library-2.11.7.jar",
-          "/home/roger/EPFL-MA/Projet_II/scalajs-library_2.11-0.6.8.jar"
+          "/home/roger/EPFL-MA/Projet_II/scalajs-library_2.11-0.6.9.jar"
 //        "C:/Users/Roger/Projet_II/scala-library-2.11.7.jar",
 //        "C:/Users/Roger/Projet_II/scalajs-library_2.11-0.6.7.jar"
       )

@@ -15,7 +15,7 @@ class FileInputStreamTests extends FunSuite {
 			text += i.toChar
 		}
 
-		println(text)
+		println(text.mkString)
 		assert(true)
 	}
 
