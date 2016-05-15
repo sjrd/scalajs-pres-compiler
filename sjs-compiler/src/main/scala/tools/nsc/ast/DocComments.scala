@@ -25,7 +25,7 @@ trait DocComments { self: Global =>
    * memleaks due to the doc of their cached symbols
    * (e.g. in baseTypeSeq) between periodic doc reloads.
    */
-  val docComments = mutable.WeakHashMap[Symbol, DocComment]()
+  val docComments = mutable.HashMap[Symbol, DocComment]()
 
   def clearDocComments() {
     cookedDocComments.clear()
