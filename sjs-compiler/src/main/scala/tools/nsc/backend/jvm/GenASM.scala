@@ -455,8 +455,8 @@ abstract class GenASM extends SubComponent with BytecodeWriters { self =>
     if(emitStackMapFrame) asm.ClassWriter.COMPUTE_FRAMES else 0
   )
 
-  val JAVA_LANG_OBJECT = asm.Type.getObjectType("java/lang/Object")
-  val JAVA_LANG_STRING = asm.Type.getObjectType("java/lang/String")
+  lazy val JAVA_LANG_OBJECT = asm.Type.getObjectType("java/lang/Object")
+  lazy val JAVA_LANG_STRING = asm.Type.getObjectType("java/lang/String")
 
   /**
    *  We call many Java varargs methods from ASM library that expect Arra[asm.Type] as argument so
@@ -1175,7 +1175,7 @@ abstract class GenASM extends SubComponent with BytecodeWriters { self =>
    *  @see Predef.classOf
    *  @see genConstant()
    */
-  private val classLiteral = immutable.Map[TypeKind, asm.Type](
+  lazy private val classLiteral = immutable.Map[TypeKind, asm.Type](
     UNIT   -> asm.Type.getObjectType("java/lang/Void"),
     BOOL   -> asm.Type.getObjectType("java/lang/Boolean"),
     BYTE   -> asm.Type.getObjectType("java/lang/Byte"),
