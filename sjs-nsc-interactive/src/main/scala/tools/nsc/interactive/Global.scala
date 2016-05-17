@@ -518,9 +518,9 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		}
 
 		protected def checkForMoreWork(pos: Position) {
-			val typerRun = currentTyperRun
-			pollForWork(pos)
-			if (typerRun != currentTyperRun) demandNewCompilerRun()
+			// val typerRun = currentTyperRun
+			// pollForWork(pos)
+			// if (typerRun != currentTyperRun) demandNewCompilerRun()
 		}
 
 		// ----------------- The Background Runner Thread -----------------------
@@ -528,7 +528,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		private var threadId = 0
 
 		/** The current presentation compiler runner */
-		@volatile private[interactive] var compileRunner: Thread = newRunnerThread()
+		// @volatile private[interactive] var compileRunner: Thread = newRunnerThread()
 
 		/** Check that the currently executing thread is the presentation compiler thread.
 		 *
@@ -543,12 +543,12 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 
 		/** Create a new presentation compiler runner.
 		 */
-		private def newRunnerThread(): Thread = {
-			threadId += 1
-			compileRunner = new PresentationCompilerThread(this, projectName)
-			compileRunner.setDaemon(true)
-			compileRunner
-		}
+		// private def newRunnerThread(): Thread = {
+		// 	threadId += 1
+		// 	compileRunner = new PresentationCompilerThread(this, projectName)
+		// 	compileRunner.setDaemon(true)
+		// 	compileRunner
+		// }
 
 		private def ensureUpToDate(unit: RichCompilationUnit) =
 			if (!unit.isUpToDate && unit.status != JustParsed) reset(unit) // reparse previously typechecked units.
@@ -1133,7 +1133,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 				case MethodType(List(), rtpe) => rtpe
 				case _ => tree.tpe
 			}
-
+      println("after val ownerTpe")
 			//print("add members")
 			for (sym <- ownerTpe.members)
 				addTypeMember(sym, pre, sym.owner != ownerTpe.typeSymbol, NoSymbol)
@@ -1382,7 +1382,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 
 			// Only start the thread if initialization was successful. A crash while forcing symbols (for example
 			// if the Scala library is not on the classpath) can leave running threads behind. See Scala IDE #1002016
-			compileRunner.start()
+			// compileRunner.start()
 		}
 
 		/** The compiler has been initialized. Constructors are evaluated in textual order,
@@ -1390,6 +1390,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		 *  have been executed.
 		 */
 		finishInitialization()
+    println("interactive.Global end")
 	}
 
 object CancelException extends Exception

@@ -92,8 +92,8 @@ trait CompilerControl { self: Global =>
     throw new FatalError("no context found for "+pos)
   }
 
-  private def postWorkItem(item: WorkItem) =
-    if (item.onCompilerThread) item() else scheduler.postWorkItem(item)
+  private def postWorkItem(item: WorkItem) = item()
+    // if (item.onCompilerThread) item() else scheduler.postWorkItem(item)
 
   /** Makes sure a set of compilation units is loaded and parsed.
    *  Returns () to syncvar `response` on completion.
@@ -263,7 +263,7 @@ trait CompilerControl { self: Global =>
     }
   }
 
-  def onCompilerThread = Thread.currentThread == compileRunner
+  def onCompilerThread = true//Thread.currentThread == compileRunner
 
   /** Info given for every member found by completion
    */
