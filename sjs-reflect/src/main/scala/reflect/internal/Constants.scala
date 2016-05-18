@@ -32,8 +32,8 @@ trait Constants extends api.Constants {
   final val EnumTag    = 13
 
   case class Constant(value: Any) extends ConstantApi {
-    import java.lang.Double.doubleToRawLongBits
-    import java.lang.Float.floatToRawIntBits
+    import java.lang.Double.doubleToLongBits
+    import java.lang.Float.floatToIntBits
 
     val tag: Int = value match {
       case null         => NullTag
@@ -254,8 +254,8 @@ trait Constants extends api.Constants {
      * conjure them with a macro.
      */
     private def equalHashValue: Any = value match {
-      case f: Float  => floatToRawIntBits(f)
-      case d: Double => doubleToRawLongBits(d)
+      case f: Float  => floatToIntBits(f)
+      case d: Double => doubleToLongBits(d)
       case v         => v
     }
 

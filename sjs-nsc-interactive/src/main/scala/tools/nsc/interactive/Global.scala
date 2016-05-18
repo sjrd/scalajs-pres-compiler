@@ -1073,6 +1073,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		}
 
 		private[interactive] def getTypeCompletion(pos: Position, response: Response[List[Member]]) {
+			println("getTypeCompletion")
 			informIDE("getTypeCompletion " + pos)
 			respondGradually(response) { typeMembers(pos) }
 			//if (debugIDE) typeMembers(pos)
@@ -1104,6 +1105,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 			val members = new Members[TypeMember]
 			println("after val members")
 			def addTypeMember(sym: Symbol, pre: Type, inherited: Boolean, viaView: Symbol) = {
+				println(s"addTypeMember : sym = $sym, pre = $pre, inherited = $inherited, viaView = $viaView")
 				val implicitlyAdded = viaView != NoSymbol
 				members.add(sym, pre, implicitlyAdded) { (s, st) =>
 					val result = new TypeMember(s, st,
@@ -1133,7 +1135,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 				case MethodType(List(), rtpe) => rtpe
 				case _ => tree.tpe
 			}
-      println("after val ownerTpe")
+      println("after val ownerTpe: " + ownerTpe)
 			//print("add members")
 			for (sym <- ownerTpe.members)
 				addTypeMember(sym, pre, sym.owner != ownerTpe.typeSymbol, NoSymbol)

@@ -28,15 +28,16 @@ def complete() = async {
 object TutorialApp extends JSApp {
 	def main(): Unit = {
 		g.require("source-map-support")
-		val exampleCode = """var x: Int = 0; x."""
+		val exampleCode = """object Test { var x = new java.util.Date; x. }"""
 		val flag = "member"
-		val offset = 18 // commencer à compter à partir de 0
+		val offset = 44 // commencer à compter à partir de 0
 
 		try {
 			val future = Compiler.autocomplete(exampleCode, flag, offset)
 			
 			future onComplete {
 				case Success(possibleCompletions) => {
+					println(possibleCompletions)
 					for (c <- possibleCompletions) println(c)
 					println("end")
 				}
