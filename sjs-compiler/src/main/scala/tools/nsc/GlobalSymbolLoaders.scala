@@ -16,6 +16,7 @@ abstract class GlobalSymbolLoaders extends symtab.SymbolLoaders {
   val platform: symbolTable.platform.type
   import global._
   def lookupMemberAtTyperPhaseIfPossible(sym: Symbol, name: Name): Symbol = {
+    println(s"lookupMemberAtTyperPhaseIfPossible : sym = $sym, name = $name")
     def lookup = sym.info.member(name)
     // if loading during initialization of `definitions` typerPhase is not yet set.
     // in that case we simply load the member at the current phase

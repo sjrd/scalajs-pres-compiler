@@ -10,6 +10,7 @@ import settings.MutableSettings
 /** A compatibility stub.
  */
 class Settings(errorFn: String => Unit) extends MutableSettings(errorFn) {
+	println("Settings extends MutableSettings")
   def this() = this(Console.println)
 
   override def withErrorFn(errorFn: String => Unit): Settings = {

@@ -36,7 +36,7 @@ object Classpath {
     } yield {
       // readFileSync returns a Node.js Buffer when encoding is not specified
       val file = fs.readFileSync(name)
-      println(file.length) // this gives the correct size
+      println(s"Number of bytes of file $name : ${file.length}") // this gives the correct size
       val buffer = new Uint8Array(fs.readFileSync(name).asInstanceOf[js.Array[Int]]).buffer
       val inputStream: InputStream = new ArrayBufferInputStream(buffer)
       name -> Streamable.bytes(inputStream)
@@ -70,16 +70,17 @@ object Classpath {
       .map((_, Streamable.bytes(in)))
 
     val dir = new VirtualDirectory(name, None)
-    for{
+    for {
       (e, data) <- entries
       if !e.isDirectory
     } {
       val tokens = e.getName.split("/")
       var d = dir
-      for(t <- tokens.dropRight(1)){
+      for(t <- tokens.dropRight(1)) {
         d = d.subdirectoryNamed(t).asInstanceOf[VirtualDirectory]
       }
       val f = d.fileNamed(tokens.last)
+      if (f.toString contains "ScalaSignature") { println(f) }
       val o = f.bufferedOutput
       o.write(data)
       o.close()
