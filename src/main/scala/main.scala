@@ -38,7 +38,6 @@ object TutorialApp extends JSApp {
 			
 			future onComplete {
 				case Success(possibleCompletions) => {
-					println(possibleCompletions)
 					for (c <- possibleCompletions) println(c)
 					println("end")
 				}

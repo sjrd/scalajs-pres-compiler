@@ -105,7 +105,7 @@ trait Mirrors extends api.Mirrors {
       ensureClassSymbol(fullname.toString, getModuleOrClass(fullname.toTypeName))
 
     def getRequiredClass(fullname: String): ClassSymbol = {
-      println(s"getRequiredClass($fullname)")
+      // println(s"getRequiredClass($fullname)")
       getClassByName(newTypeNameCached(fullname))
     }
 
@@ -248,21 +248,16 @@ trait Mirrors extends api.Mirrors {
     // }
 
     def init() {
-      println("def init in reflect internal Mirrors")
       if (initialized) return
       // Still fiddling with whether it's cleaner to do some of this setup here
       // or from constructors.  The latter approach tends to invite init order issues.
 
       EmptyPackageClass setInfo rootLoader
       EmptyPackage setInfo EmptyPackageClass.tpe
-      println("après les setInfo")
       connectModuleToClass(EmptyPackage, EmptyPackageClass)
-      println("entre les connectModuleToClass")
       connectModuleToClass(RootPackage, RootClass)
-      println("après les connectModuleToClass")
       RootClass.info.decls enter EmptyPackage
       RootClass.info.decls enter RootPackage
-      println("avant if (rootOwner != NoSymbol)")
       if (rootOwner != NoSymbol) {
         // synthetic core classes are only present in root mirrors
         // because Definitions.scala, which initializes and enters them, only affects rootMirror
@@ -277,7 +272,6 @@ trait Mirrors extends api.Mirrors {
       }
 
       initialized = true
-      println("def init end")
     }
   }
 
@@ -296,10 +290,8 @@ trait Mirrors extends api.Mirrors {
     // Features common to RootClass and RootPackage, the roots of all
     // type and term symbols respectively.
     sealed trait RootSymbol extends WellKnownSymbol with thisUniverse.RootSymbol {
-      println("RootSymbol in Mirror")
       final override def isRootSymbol = true
       override def owner              = {
-        // assert(!js.isUndefined(rootOwner))
         rootOwner
       }
       override def typeOfThis         = thisSym.tpe
@@ -307,8 +299,6 @@ trait Mirrors extends api.Mirrors {
     }
 
     class RootPackage extends ModuleSymbol(rootOwner, NoPosition, nme.ROOTPKG) with RootSymbol {
-      println("RootPackage class")
-      // assert(!js.isUndefined(rootOwner))
       this setInfo NullaryMethodType(RootClass.tpe)
 
       override def isRootPackage = true
@@ -319,11 +309,8 @@ trait Mirrors extends api.Mirrors {
     lazy val RootPackage = new RootPackage
 
     class RootClass extends PackageClassSymbol(rootOwner, NoPosition, tpnme.ROOT) with RootSymbol {
-      println("RootClass in Mirrors")
       this setInfo rootLoader
       
-      // assert(!js.isUndefined(rootOwner))
-
       override def isRoot            = true
       override def isEffectiveRoot   = true
       override def isNestedClass     = false

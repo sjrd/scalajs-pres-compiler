@@ -1675,7 +1675,7 @@ trait Symbols extends api.Symbols { self: SymbolTable =>
 
 		/** Initialize the symbol */
 		final def initialize: this.type = {
-			println(s"initialize Symbol : ${this.fullName}, owner = ${this.owner}")
+			// println(s"initialize Symbol : ${this.fullName}, owner = ${this.owner}")
 			if (!isInitialized) info
 			this
 		}

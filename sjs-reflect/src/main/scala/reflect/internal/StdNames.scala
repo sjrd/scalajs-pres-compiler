@@ -1181,7 +1181,5 @@ trait StdNames {
     )
   }
 
-  lazy val sn: SymbolNames = new SymbolNames { 
-    println("new SymbolNames")
-  }
+  lazy val sn: SymbolNames = new SymbolNames { }
 }

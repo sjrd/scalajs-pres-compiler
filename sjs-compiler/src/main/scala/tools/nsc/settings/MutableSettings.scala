@@ -263,7 +263,6 @@ class MutableSettings(val errorFn: String => Unit)
 
     /** Check that dir is exists and is a directory. */
     private def checkDir(dir: AbstractFile, name: String, allowJar: Boolean = false): AbstractFile = {
-    		println(s"MutableSettings checkDir : dir = $dir, name = $name, allowJar = $allowJar")
       if (dir != null && dir.isDirectory)
         dir
       else if (allowJar && dir == null && Jar.isJarOrZip(name, examineFile = false))

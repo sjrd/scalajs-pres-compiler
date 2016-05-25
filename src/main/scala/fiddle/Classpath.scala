@@ -80,12 +80,11 @@ object Classpath {
         d = d.subdirectoryNamed(t).asInstanceOf[VirtualDirectory]
       }
       val f = d.fileNamed(tokens.last)
-      if (f.toString contains "ScalaSignature") { println(f) }
       val o = f.bufferedOutput
       o.write(data)
       o.close()
     }
-    println(dir.size)
+    // println(dir.size)
     dir
   }
 

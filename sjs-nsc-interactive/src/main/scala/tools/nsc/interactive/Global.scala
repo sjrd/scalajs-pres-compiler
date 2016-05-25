@@ -114,13 +114,12 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 	with ContextTrees
 	with RichCompilationUnits
 	with Picklers {
-		println("Global begin")
 		import definitions._
 		
 		if (!settings.Ymacroexpand.isSetByUser)
 			settings.Ymacroexpand.value = settings.MacroExpand.Discard
 
-		val debugIDE: Boolean = true//settings.YpresentationDebug.value
+		val debugIDE: Boolean = settings.YpresentationDebug.value
 		val verboseIDE: Boolean = settings.YpresentationVerbose.value
 		private val anyThread: Boolean = settings.YpresentationAnyThread.value
 
@@ -233,7 +232,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		override lazy val analyzer = new {
 			val global: Global.this.type = Global.this
 		} with InteractiveAnalyzer
-		println("after lazy val analyzer Global")
+
 		private def cleanAllResponses() {
 			cleanResponses(waitLoadedTypeResponses)
 			cleanResponses(getParsedEnteredResponses)
@@ -297,9 +296,8 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 
 		/** The currently active typer run */
 		private var currentTyperRun: TyperRun = _
-		println("before new TyperRun")
 		newTyperRun()
-		println("after new TyperRun")
+
 		/** Is a background compiler run needed?
 		 *  Note: outOfDate is true as long as there is a background compile scheduled or going on.
 		 */
@@ -383,7 +381,7 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		/** The top level classes and objects currently seen in the presentation compiler
 		 */
 		private val currentTopLevelSyms = new mutable.LinkedHashSet[Symbol]
-		println("after currentTopLevelSyms")
+    
 		/** The top level classes and objects no longer seen in the presentation compiler
 		 */
 		val deletedTopLevelSyms = new mutable.LinkedHashSet[Symbol] with mutable.SynchronizedSet[Symbol]
@@ -1073,7 +1071,6 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		}
 
 		private[interactive] def getTypeCompletion(pos: Position, response: Response[List[Member]]) {
-			println("getTypeCompletion")
 			informIDE("getTypeCompletion " + pos)
 			respondGradually(response) { typeMembers(pos) }
 			//if (debugIDE) typeMembers(pos)
@@ -1103,9 +1100,8 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 			debugLog("typeMembers at "+tree+" "+tree.tpe)
 			val superAccess = tree.isInstanceOf[Super]
 			val members = new Members[TypeMember]
-			println("after val members")
+
 			def addTypeMember(sym: Symbol, pre: Type, inherited: Boolean, viaView: Symbol) = {
-				println(s"addTypeMember : sym = $sym, pre = $pre, inherited = $inherited, viaView = $viaView")
 				val implicitlyAdded = viaView != NoSymbol
 				members.add(sym, pre, implicitlyAdded) { (s, st) =>
 					val result = new TypeMember(s, st,
@@ -1135,7 +1131,6 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 				case MethodType(List(), rtpe) => rtpe
 				case _ => tree.tpe
 			}
-      println("after val ownerTpe: " + ownerTpe)
 			//print("add members")
 			for (sym <- ownerTpe.members)
 				addTypeMember(sym, pre, sym.owner != ownerTpe.typeSymbol, NoSymbol)
@@ -1323,7 +1318,6 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		/** The typer run */
 		class TyperRun extends Run {
 			// units is always empty
-			println("in class TyperRun")
 			/** canRedefine is used to detect double declarations of classes and objects
 			 *  in multiple source files.
 			 *  Since the IDE rechecks units several times in the same run, these tests
@@ -1392,7 +1386,6 @@ class Global(settings: Settings, _reporter: Reporter, projectName: String = "") 
 		 *  have been executed.
 		 */
 		finishInitialization()
-    println("interactive.Global end")
 	}
 
 object CancelException extends Exception

@@ -12,12 +12,12 @@ class File(pathname: String) {
 
 	def this(parent: File, child: String) {
 		this(parent.getPath + File.separator + child)
-		println(s"Parent File child String constructor called : parent.getPath = ${parent.getPath}, child = $child")
+		// println(s"Parent File child String constructor called : parent.getPath = ${parent.getPath}, child = $child")
 	}
 
 	def this(parent: String, child: String) {
 		this(parent + File.separator + child)
-		println("Parent String child String constructor called")
+		// println("Parent String child String constructor called")
 	}
 
 	def this(uri: File.URI) {
@@ -55,11 +55,11 @@ class File(pathname: String) {
 	}
 	
 	def isDirectory = {
-		println(s"isDirectory : path = $path")
+		// println(s"isDirectory : path = $path")
 		try {
 			File.nFileSystem.lstatSync(path).isDirectory().asInstanceOf[Boolean]
 		} catch {
-			case e: Exception => println(s"isDirectory exception getCause : ${e.getCause}"); false
+			case e: Exception => /*println(s"isDirectory exception : ${e.toString}");*/ false
 		}
 	}
 	

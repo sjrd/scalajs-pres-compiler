@@ -123,7 +123,6 @@ abstract class ClassfileParser {
       throw new IOException(s"illegal class file dependency between '$sym' and '$busy'")
 
     busy = sym
-    // println(s"body : $body")
     try body
     catch parseErrorHandler
     finally busy = NoSymbol
@@ -135,7 +134,6 @@ abstract class ClassfileParser {
   }
 
   def parse(file: AbstractFile, root: Symbol): Unit = {
-    println(s"parse : file = $file, root.fullName = ${root.fullName}")
     debuglog("[class] >> " + root.fullName)
 
     this.file = file
@@ -215,7 +213,6 @@ abstract class ClassfileParser {
     /** Return the name found at given index in the constant pool, with '/' replaced by '.'. */
     def getExternalName(index: Int): Name = {
       if (index <= 0 || len <= index) {
-        println(s"getExternalName > errorBadIndex : index = $index, len = $len")
         errorBadIndex(index)
       }
 
@@ -613,7 +610,6 @@ abstract class ClassfileParser {
   }
 
   private def sigToType(sym: Symbol, sig: Name): Type = {
-    println(s"sigToType : sym = $sym, sig = $sig")
     var index = 0
     val end = sig.length
     def accept(ch: Char) {
@@ -771,7 +767,6 @@ abstract class ClassfileParser {
       }
       accept('>')
     }
-    println("sigToType before ownTypeParams")
     val ownTypeParams = newTParams.toList
     if (!ownTypeParams.isEmpty)
       sym.setInfo(new TypeParamsType(ownTypeParams))
@@ -786,7 +781,6 @@ abstract class ClassfileParser {
         }
         ClassInfoType(parents.toList, instanceScope, sym)
       }
-    println("sigToType before GenPolyType")
     GenPolyType(ownTypeParams, tpe)
   } // sigToType
 
@@ -799,7 +793,6 @@ abstract class ClassfileParser {
     }
     def parseAttribute() {
       val attrName = readTypeName()
-      println(s"parseAttribute(): attrName = $attrName")
       val attrLen  = u4
       attrName match {
         case tpnme.SignatureATTR =>
@@ -945,33 +938,26 @@ abstract class ClassfileParser {
      * return None.
      */
     def parseAnnotation(attrNameIndex: Int): Option[AnnotationInfo] = try {
-      println(s"parseAnnotation : attrNameIndex : $attrNameIndex")
-      if (attrNameIndex == 25856) { println ("25856 !!!") }
       val attrType = pool.getType(attrNameIndex)
-      // println(s"parseAnnotation : attrType = $attrType")
       val nargs = u2
       val nvpairs = new ListBuffer[(Name, ClassfileAnnotArg)]
       var hasError = false
       for (i <- 0 until nargs) {
         val name = readName()
-        println(s"name = $name")
         // The "bytes: String" argument of the ScalaSignature attribute is parsed specially so that it is
         // available as an array of bytes (the pickled Scala signature) instead of as a string. The pickled signature
         // is encoded as a string because of limitations in the Java class file format.
         if ((attrType == ScalaSignatureAnnotation.tpe) && (name == nme.bytes)) {
-          println("attrType == ScalaSignatureAnnotation.tpe")
           parseScalaSigBytes match {
             case Some(c) => nvpairs += ((name, c))
             case None => hasError = true
           }
         } else if ((attrType == ScalaLongSignatureAnnotation.tpe) && (name == nme.bytes)) {
-          println("(attrType == ScalaLongSignatureAnnotation.tpe) && (name == nme.bytes)")
           parseScalaLongSigBytes match {
             case Some(c) => nvpairs += ((name, c))
             case None => hasError = true
           }
         } else {
-            println("parseAnnotArg")
             parseAnnotArg match {
             case Some(c) => nvpairs += ((name, c))
             case None => hasError = true
@@ -991,7 +977,6 @@ abstract class ClassfileParser {
         // the classpath would *not* end up here. A class not found is signaled
         // with a `FatalError` exception, handled above. Here you'd end up after a NPE (for example),
         // and that should never be swallowed silently.
-        println(s"Caught: $ex while parsing annotations in ${in.file}")
         warning(s"Caught: $ex while parsing annotations in ${in.file}")
         if (settings.debug) ex.printStackTrace()
 
