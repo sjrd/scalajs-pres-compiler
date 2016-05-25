@@ -516,8 +516,8 @@ trait Definitions extends api.StandardDefinitions {
     lazy val QuasiquoteClass_api_apply   = if (QuasiquoteClass_api != NoSymbol) getMember(QuasiquoteClass_api, nme.apply) else NoSymbol
     lazy val QuasiquoteClass_api_unapply = if (QuasiquoteClass_api != NoSymbol) getMember(QuasiquoteClass_api, nme.unapply) else NoSymbol
 
-    lazy val ScalaSignatureAnnotation = requiredClass[scala.reflect.ScalaSignature]
-    lazy val ScalaLongSignatureAnnotation = requiredClass[scala.reflect.ScalaLongSignature]
+    lazy val ScalaSignatureAnnotation = getRequiredClass("scala.reflect.ScalaSignature")
+    lazy val ScalaLongSignatureAnnotation = getRequiredClass("scala.reflect.ScalaLongSignature")
 
     lazy val LambdaMetaFactory = getClassIfDefined("java.lang.invoke.LambdaMetafactory")
     lazy val MethodHandle = getClassIfDefined("java.lang.invoke.MethodHandle")
