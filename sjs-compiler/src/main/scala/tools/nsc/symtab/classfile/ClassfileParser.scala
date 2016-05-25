@@ -841,7 +841,7 @@ abstract class ClassfileParser {
           if (isScalaAnnot || !isScala) {
             val scalaSigAnnot = parseAnnotations(attrLen)
             if (isScalaAnnot) {
-              println(scalaSigAnnot)
+              // println(scalaSigAnnot)
               scalaSigAnnot match {
                 case Some(san: AnnotationInfo) =>
                   val bytes =
