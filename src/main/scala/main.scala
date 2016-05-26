@@ -6,6 +6,7 @@ import ExecutionContext.Implicits.global
 import scala.util.{Success, Failure}
 import scala.scalajs.js
 import js.Dynamic.{global => g}
+import js.annotation.JSExport
 
 /* Code copié depuis Client.scala
 def complete() = async {
@@ -22,10 +23,37 @@ def complete() = async {
 	// dans Editor.scala. Les row et column de l'objet JS renvoyé par getCursorPosition commencent à (0, 0)
 	// pour un curseur tout en haut à gauche
 	def row = editor.getCursorPosition().row.asInstanceOf[Int]
-  def column= editor.getCursorPosition().column.asInstanceOf[Int]
+  def column = editor.getCursorPosition().column.asInstanceOf[Int]
 */
 
-object TutorialApp extends JSApp {
+object ScalaJSAutocompleter extends JSApp {
+
+	@JSExport
+	def askAutocompletion(editor: js.Dynamic) {
+    val code = editor.getValue().asInstanceOf[String]
+    val row = editor.getCursorPosition().row.asInstanceOf[Int]
+  	val column = editor.getCursorPosition().column.asInstanceOf[Int]
+    val intOffset = column + code.split("\n").take(row).map(_.length + 1).sum
+    val flag = if(code.take(intOffset).endsWith(".")) "member" else "scope"
+		try {
+			val future = Compiler.autocomplete(code, flag, intOffset)
+			
+			future onComplete {
+				case Success(possibleCompletions) => {
+					var listItems = new StringBuilder
+					for (c <- possibleCompletions) {
+						listItems ++= s"<li>$c</li>"
+					}
+					println("autocompletion done")
+					listItems.toString
+				}
+				case Failure(t) => t.printStackTrace
+			}
+		} catch {
+			case th: Throwable => th.printStackTrace
+		}
+	}
+
 	def main(): Unit = {
 		g.require("source-map-support")
 		// val exampleCode = """object Test { var x = new java.util.Date; x. }"""

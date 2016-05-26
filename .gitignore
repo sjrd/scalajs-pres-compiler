@@ -26,3 +26,5 @@ node_modules/
 misc
 plugins
 scala-devel
+
+ace-editor-files/

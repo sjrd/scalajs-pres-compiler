@@ -37,7 +37,7 @@ object Classpath {
       // readFileSync returns a Node.js Buffer when encoding is not specified
       val file = fs.readFileSync(name)
       println(s"Number of bytes of file $name : ${file.length}") // this gives the correct size
-      val buffer = new Uint8Array(fs.readFileSync(name).asInstanceOf[js.Array[Int]]).buffer
+      val buffer = new Uint8Array(file.asInstanceOf[js.Array[Int]]).buffer
       val inputStream: InputStream = new ArrayBufferInputStream(buffer)
       name -> Streamable.bytes(inputStream)
     }
