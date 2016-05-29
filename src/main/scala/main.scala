@@ -28,6 +28,8 @@ def complete() = async {
 
 object ScalaJSAutocompleter extends JSApp {
 
+	val fileLoader = new Classpath
+
 	@JSExport
 	def askAutocompletion(editor: js.Dynamic) {
     val code = editor.getValue().asInstanceOf[String]
@@ -36,7 +38,8 @@ object ScalaJSAutocompleter extends JSApp {
     val intOffset = column + code.split("\n").take(row).map(_.length + 1).sum
     val flag = if(code.take(intOffset).endsWith(".")) "member" else "scope"
 		try {
-			val future = Compiler.autocomplete(code, flag, intOffset)
+			val compiler = new Compiler(fileLoader)
+			val future = compiler.autocomplete(code, flag, intOffset)
 			
 			future onComplete {
 				case Success(possibleCompletions) => {
@@ -55,24 +58,24 @@ object ScalaJSAutocompleter extends JSApp {
 	}
 
 	def main(): Unit = {
-		g.require("source-map-support")
-		// val exampleCode = """object Test { var x = new java.util.Date; x. }"""
-		   val exampleCode = """object Test { var x: Option[String] = None; x. }"""
-		val flag = "member"
-		val offset = 46 // commencer à compter à partir de 0
+// 		g.require("source-map-support")
+// 		// val exampleCode = """object Test { var x = new java.util.Date; x. }"""
+// 		   val exampleCode = """object Test { var x: Option[String] = None; x. }"""
+// 		val flag = "member"
+// 		val offset = 46 // commencer à compter à partir de 0
 
-		try {
-			val future = Compiler.autocomplete(exampleCode, flag, offset)
+// 		try {
+// 			val future = Compiler.autocomplete(exampleCode, flag, offset)
 			
-			future onComplete {
-				case Success(possibleCompletions) => {
-					for (c <- possibleCompletions) println(c)
-					println("end")
-				}
-				case Failure(t) => t.printStackTrace
-			}
-		} catch {
-			case th: Throwable => th.printStackTrace
-		}
+// 			future onComplete {
+// 				case Success(possibleCompletions) => {
+// 					for (c <- possibleCompletions) println(c)
+// 					println("end")
+// 				}
+// 				case Failure(t) => t.printStackTrace
+// 			}
+// 		} catch {
+// 			case th: Throwable => th.printStackTrace
+// 		}
 	}
 }

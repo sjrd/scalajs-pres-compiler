@@ -23,7 +23,7 @@ import scala.util.{ Success, Failure }
  * Handles the interaction between scala-js-fiddle and
  * scalac/scalajs-tools to compile and optimize code submitted by users.
  */
-object Compiler {
+class Compiler(loader: Classpath) {
 
   val blacklist = Seq("<init>")
 
@@ -47,31 +47,31 @@ object Compiler {
     singleFile
   }
 
-  def inMemClassloader = {
-    new ClassLoader(this.getClass.getClassLoader) {
-      val classCache = mutable.Map.empty[String, Option[Class[_]]]
-      override def findClass(name: String): Class[_] = {
-        println("Looking for Class " + name)
-        val fileName = name.replace('.', '/') + ".class"
-        val res = classCache.getOrElseUpdate(
-          name,
-          Classpath.scalac
-            .map(_.lookupPathUnchecked(fileName, false))
-            .find(_ != null).map { f =>
-              val data = f.toByteArray
-              this.defineClass(name, data, 0, data.length)
-            })
-        res match {
-          case None =>
-            println("Not Found Class " + name)
-            throw new ClassNotFoundException()
-          case Some(cls) =>
-            println("Found Class " + name)
-            cls
-        }
-      }
-    }
-  }
+  // def inMemClassloader = {
+  //   new ClassLoader(this.getClass.getClassLoader) {
+  //     val classCache = mutable.Map.empty[String, Option[Class[_]]]
+  //     override def findClass(name: String): Class[_] = {
+  //       println("Looking for Class " + name)
+  //       val fileName = name.replace('.', '/') + ".class"
+  //       val res = classCache.getOrElseUpdate(
+  //         name,
+  //         Classpath.scalac
+  //           .map(_.lookupPathUnchecked(fileName, false))
+  //           .find(_ != null).map { f =>
+  //             val data = f.toByteArray
+  //             this.defineClass(name, data, 0, data.length)
+  //           })
+  //       res match {
+  //         case None =>
+  //           println("Not Found Class " + name)
+  //           throw new ClassNotFoundException()
+  //         case Some(cls) =>
+  //           println("Found Class " + name)
+  //           cls
+  //       }
+  //     }
+  //   }
+  // }
   /**
    * Mixed in to make a Scala compiler run entirely in-memory,
    * loading its classpath and running macros from pre-loaded
@@ -96,7 +96,7 @@ object Compiler {
   def initGlobalBits(logger: String => Unit) = {
     val vd = new io.VirtualDirectory("(memory)", None)
     val jCtx = new JavaContext()
-    val jDirs = Classpath.scalac.map(new DirectoryClassPath(_, jCtx)).toVector
+    val jDirs = loader.scalac.map(new DirectoryClassPath(_, jCtx)).toVector
     lazy val settings = new Settings
 
     settings.outputDirs.setSingleOutput(vd)

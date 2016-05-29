@@ -49,6 +49,7 @@ lazy val root = (project in file(".")).
 		jsEnv := NodeJSEnv(args = Seq("--stack-size=8192")).value,
 		libraryDependencies += "org.scala-js" %% "scalajs-javalib-ex" % scalaJSVersion,
 		libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0-M15" % "test",
+		libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.0",
 		scalaJSSemantics ~= { _.withModuleInit(org.scalajs.core.tools.sem.CheckedBehavior.Compliant) }
 		// libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "latest.release"
 		// "latest.release"
