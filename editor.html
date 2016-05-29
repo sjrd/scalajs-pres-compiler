@@ -31,7 +31,9 @@
 <script type="text/javascript" src="target/scala-2.11/scala-js-presentation-compiler-fastopt.js"></script>
 <script src="ace-editor-files/src/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
-		// set the editor up
+	// initialize app
+	ScalaJSAutocompleter().main()
+	// set the editor up
 	var editor = ace.edit("editor");
 	editor.setTheme("ace/theme/monokai");
 	editor.session.setMode("ace/mode/scala");
@@ -39,7 +41,7 @@
 		name: 'autocomplete',
 		bindKey: {win: 'Ctrl-Space', mac: 'Command-Space'},
 		exec: function(editor) {
-			var listItems = ScalaJSAutocompleter().askAutocompletion(editor);
+			var listItems = autocompleter.askAutocompletion(editor);
 			console.log(listItems);
 		}
 });

@@ -7,10 +7,8 @@ import scala.scalajs.js
 import js.Dynamic.global
 import js.DynamicImplicits._
 import org.scalajs.dom._
-// import org.scalajs.core.tools.classpath.builder.{AbstractJarLibClasspathBuilder, PartialClasspathBuilder, JarTraverser}
-// import org.scalajs.core.tools.io._
 import scala.collection.immutable.Traversable
-import scala.util.Random
+import scala.collection.mutable.ArrayBuffer
 import scala.scalajs.js.typedarray.{Uint8Array, Int8Array, ArrayBufferInputStream}
 
 /**
@@ -24,6 +22,18 @@ class Classpath {
    * memory but is better than reaching all over the filesystem every time we
    * want to do something.
    */
+  def filesReady = virtualDirectories.length == numberOfFilesToLoad
+
+  def getVirtualDirectories: Option[Seq[VirtualDirectory]] = {
+    if (filesReady) {
+      Some(scala.collection.immutable.Seq[VirtualDirectory](virtualDirectories: _*))
+    } else {
+      None
+    }
+  } 
+
+  private var virtualDirectories = new ArrayBuffer[VirtualDirectory]()
+
   private val paths = Seq(
     "/home/roger/EPFL-MA/Projet_II/scala-library-2.11.7.jar",
     "/home/roger/EPFL-MA/Projet_II/scalajs-library_2.11-0.6.9.jar",
@@ -31,12 +41,8 @@ class Classpath {
   )
 
   private val numberOfFilesToLoad = paths.length
-  private var loadedCounter = 0 
-
-  def filesReady = loadedCounter == numberOfFilesToLoad
 
   for (path <- paths) {
-    val array = new Uint8Array(1)
     val xhr = new XMLHttpRequest()
     xhr.open("GET", "file://" + path)
     xhr.responseType = "arraybuffer"
@@ -67,17 +73,12 @@ class Classpath {
         o.close()
       }
       // println(dir.size)
-      dir
-    }
-
-
-
-
-
+      virtualDirectories += dir
+      println(s"${path.split("/").last} loaded")
     })
     xhr.send()
-  } 
-    
+  }
+}
 //    val paths = List("C:/Program Files/Java/jre1.8.0_74/lib/rt.jar")
 // /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.77-1.b03.fc23.x86_64/jre/lib/rt.jar
 //     val paths = List("/home/roger/EPFL-MA/Projet_II/rt.jar")
@@ -93,35 +94,35 @@ class Classpath {
 //     }
 //     println("Files loaded...")
 //     jarFiles ++ bootFiles
-  }
+  // }
   /**
    * The loaded files shaped for Scalac to use
    */
-  val scalac = for((name, bytes) <- loadedFiles) yield {
-    println(s"Loading $name for Scalac")
-    val in = new ZipInputStream(new ByteArrayInputStream(bytes))
-    val entries = Iterator
-      .continually(in.getNextEntry)
-      .takeWhile(_ != null)
-      .map((_, Streamable.bytes(in)))
+//   val scalac = for((name, bytes) <- loadedFiles) yield {
+//     println(s"Loading $name for Scalac")
+//     val in = new ZipInputStream(new ByteArrayInputStream(bytes))
+//     val entries = Iterator
+//       .continually(in.getNextEntry)
+//       .takeWhile(_ != null)
+//       .map((_, Streamable.bytes(in)))
 
-    val dir = new VirtualDirectory(name, None)
-    for {
-      (e, data) <- entries
-      if !e.isDirectory
-    } {
-      val tokens = e.getName.split("/")
-      var d = dir
-      for(t <- tokens.dropRight(1)) {
-        d = d.subdirectoryNamed(t).asInstanceOf[VirtualDirectory]
-      }
-      val f = d.fileNamed(tokens.last)
-      val o = f.bufferedOutput
-      o.write(data)
-      o.close()
-    }
-    // println(dir.size)
-    dir
-  }
+//     val dir = new VirtualDirectory(name, None)
+//     for {
+//       (e, data) <- entries
+//       if !e.isDirectory
+//     } {
+//       val tokens = e.getName.split("/")
+//       var d = dir
+//       for(t <- tokens.dropRight(1)) {
+//         d = d.subdirectoryNamed(t).asInstanceOf[VirtualDirectory]
+//       }
+//       val f = d.fileNamed(tokens.last)
+//       val o = f.bufferedOutput
+//       o.write(data)
+//       o.close()
+//     }
+//     // println(dir.size)
+//     dir
+//   }
 
-}
+// }

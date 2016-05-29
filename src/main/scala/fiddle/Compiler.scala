@@ -94,9 +94,17 @@ class Compiler(loader: Classpath) {
    * normal and presentation compiler
    */
   def initGlobalBits(logger: String => Unit) = {
+
+    case class JarsNotReadyException(message: String) extends Exception(message)
+
     val vd = new io.VirtualDirectory("(memory)", None)
     val jCtx = new JavaContext()
-    val jDirs = loader.scalac.map(new DirectoryClassPath(_, jCtx)).toVector
+    // val jDirs = loader.getVirtualDirectories.map(new DirectoryClassPath(_, jCtx)).toVector
+    val jDirs = loader.getVirtualDirectories match {
+      case Some(dirs) => dirs.map(new DirectoryClassPath(_, jCtx)).toVector
+      case None => throw JarsNotReadyException("Files from the JARs are not loaded") 
+    }
+
     lazy val settings = new Settings
 
     settings.outputDirs.setSingleOutput(vd)

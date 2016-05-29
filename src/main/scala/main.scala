@@ -27,7 +27,7 @@ def complete() = async {
 */
 
 object ScalaJSAutocompleter extends JSApp {
-
+	println("Initializing...")
 	val fileLoader = new Classpath
 
 	@JSExport
@@ -58,6 +58,7 @@ object ScalaJSAutocompleter extends JSApp {
 	}
 
 	def main(): Unit = {
+		println("Initializing (main)...")
 // 		g.require("source-map-support")
 // 		// val exampleCode = """object Test { var x = new java.util.Date; x. }"""
 // 		   val exampleCode = """object Test { var x: Option[String] = None; x. }"""
