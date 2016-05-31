@@ -7,6 +7,7 @@ import scala.util.{Success, Failure}
 import scala.scalajs.js
 import js.Dynamic.{global => g}
 import js.annotation.JSExport
+import scala.annotation.meta.field
 
 /* Code copié depuis Client.scala
 def complete() = async {
@@ -28,6 +29,7 @@ def complete() = async {
 
 object ScalaJSAutocompleter extends JSApp {
 	println("Initializing...")
+	@(JSExport @field)
 	val fileLoader = new Classpath
 
 	@JSExport
