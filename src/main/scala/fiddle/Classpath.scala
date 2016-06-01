@@ -10,6 +10,7 @@ import org.scalajs.dom._
 import scala.collection.immutable.Traversable
 import scala.collection.mutable.ArrayBuffer
 import scala.scalajs.js.typedarray.{Uint8Array, Int8Array, ArrayBufferInputStream}
+import js.annotation.JSExport
 
 /**
  * Loads the jars that make up the classpath of the scala-js-fiddle
@@ -22,6 +23,7 @@ class Classpath {
    * memory but is better than reaching all over the filesystem every time we
    * want to do something.
    */
+  @JSExport
   def filesReady = virtualDirectories.length == numberOfFilesToLoad
 
   def getVirtualDirectories: Option[Seq[VirtualDirectory]] = {

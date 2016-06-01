@@ -29,7 +29,7 @@ def complete() = async {
 
 object ScalaJSAutocompleter extends JSApp {
 	println("Initializing...")
-	@(JSExport @field)
+	@JSExport
 	val fileLoader = new Classpath
 
 	@JSExport
@@ -50,7 +50,7 @@ object ScalaJSAutocompleter extends JSApp {
 						listItems ++= s"<li>$c</li>"
 					}
 					println("autocompletion done")
-					listItems.toString
+					println(listItems.toString)
 				}
 				case Failure(t) => t.printStackTrace
 			}

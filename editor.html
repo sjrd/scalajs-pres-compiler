@@ -42,7 +42,7 @@
 		name: 'autocomplete',
 		bindKey: {win: 'Ctrl-Space', mac: 'Command-Space'},
 		exec: function(editor) {
-      if (autocompleter.fileLoader().filesReady()) {
+      if (autocompleter.fileLoader.filesReady) {
 			 var listItems = autocompleter.askAutocompletion(editor);
 			 console.log(listItems);
       } else {

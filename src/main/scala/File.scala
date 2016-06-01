@@ -91,9 +91,9 @@ object File {
 	class URI(uri: String)
 	private val nFileSystem = global.require("fs")
 	private val nPath = global.require("path")
-	val pathSeparator: String = nPath.delimiter.asInstanceOf[String]
+	val pathSeparator: String = ":"
 	val pathSeparatorChar: Char = pathSeparator(0)
-	val separator: String = nPath.sep.asInstanceOf[String]
+	val separator: String = "/"
 	val separatorChar: Char = separator(0)
 
 }

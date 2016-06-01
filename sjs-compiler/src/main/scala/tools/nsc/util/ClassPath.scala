@@ -38,8 +38,7 @@ object ClassPath {
     def lsDir(dir: Directory, filt: String => Boolean = _ => true) =
       dir.list filter (x => filt(x.name) && (x.isDirectory || isJarOrZip(x))) map (_.path) toList
 
-    if (pattern == "*") lsDir(Directory("."))
-    else if (pattern endsWith wildSuffix) lsDir(Directory(pattern dropRight 2))
+    if (pattern == "*") lsDir(Directory(".")) else if (pattern endsWith wildSuffix) lsDir(Directory(pattern dropRight 2))
     else if (pattern contains '*') {
       try {
         val regexp = ("^" + pattern.replaceAllLiterally("""\*""", """.*""") + "$").r
@@ -51,10 +50,10 @@ object ClassPath {
   }
 
   /** Split classpath using platform-dependent path separator */
-  def split(path: String): List[String] = (path split pathSeparator).toList filterNot (_ == "") distinct
+  def split(path: String): List[String] = (path split "/").toList filterNot (_ == "") distinct
 
   /** Join classpath using platform-dependent path separator */
-  def join(paths: String*): String  = paths filterNot (_ == "") mkString pathSeparator
+  def join(paths: String*): String  = paths filterNot (_ == "") mkString "/"
 
   /** Split the classpath, apply a transformation function, and reassemble it. */
   def map(cp: String, f: String => String): String = join(split(cp) map f: _*)
