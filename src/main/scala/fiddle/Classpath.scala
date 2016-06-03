@@ -18,11 +18,7 @@ import js.annotation.JSExport
  * scala-compile and scalajs-tools
  */
 class Classpath {
-  /**
-   * In memory cache of all the jars used in the compiler. This takes up some
-   * memory but is better than reaching all over the filesystem every time we
-   * want to do something.
-   */
+  
   @JSExport
   def filesReady = virtualDirectories.length == numberOfFilesToLoad
 
@@ -34,6 +30,11 @@ class Classpath {
     }
   } 
 
+  /**
+   * In memory cache of all the jars used in the compiler. This takes up some
+   * memory but is better than reaching all over the filesystem every time we
+   * want to do something.
+   */
   private var virtualDirectories = new ArrayBuffer[VirtualDirectory]()
 
   private val paths = Seq(
@@ -81,50 +82,3 @@ class Classpath {
     xhr.send()
   }
 }
-//    val paths = List("C:/Program Files/Java/jre1.8.0_74/lib/rt.jar")
-// /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.77-1.b03.fc23.x86_64/jre/lib/rt.jar
-//     val paths = List("/home/roger/EPFL-MA/Projet_II/rt.jar")
-//     val bootFiles = for {
-//       // les System properties ne sont pas accessibles par Scala.js 
-// //      prop <- Seq(/*"java.class.path", */"sun.boot.class.path")
-// //      path <- System.getProperty(prop).split(System.getProperty("path.separator"))
-//     	path <- paths
-//       vfile = scala.reflect.io.File(path)
-//       if vfile.exists && !vfile.isDirectory
-//     } yield {
-//       path.split("/").last -> vfile.toByteArray()
-//     }
-//     println("Files loaded...")
-//     jarFiles ++ bootFiles
-  // }
-  /**
-   * The loaded files shaped for Scalac to use
-   */
-//   val scalac = for((name, bytes) <- loadedFiles) yield {
-//     println(s"Loading $name for Scalac")
-//     val in = new ZipInputStream(new ByteArrayInputStream(bytes))
-//     val entries = Iterator
-//       .continually(in.getNextEntry)
-//       .takeWhile(_ != null)
-//       .map((_, Streamable.bytes(in)))
-
-//     val dir = new VirtualDirectory(name, None)
-//     for {
-//       (e, data) <- entries
-//       if !e.isDirectory
-//     } {
-//       val tokens = e.getName.split("/")
-//       var d = dir
-//       for(t <- tokens.dropRight(1)) {
-//         d = d.subdirectoryNamed(t).asInstanceOf[VirtualDirectory]
-//       }
-//       val f = d.fileNamed(tokens.last)
-//       val o = f.bufferedOutput
-//       o.write(data)
-//       o.close()
-//     }
-//     // println(dir.size)
-//     dir
-//   }
-
-// }

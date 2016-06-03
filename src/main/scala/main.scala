@@ -8,6 +8,7 @@ import scala.scalajs.js
 import js.Dynamic.{global => g}
 import js.annotation.JSExport
 import scala.annotation.meta.field
+import org.scalajs.dom.document
 
 /* Code copié depuis Client.scala
 def complete() = async {
@@ -42,15 +43,14 @@ object ScalaJSAutocompleter extends JSApp {
 		try {
 			val compiler = new Compiler(fileLoader)
 			val future = compiler.autocomplete(code, flag, intOffset)
-			
 			future onComplete {
 				case Success(possibleCompletions) => {
 					var listItems = new StringBuilder
 					for (c <- possibleCompletions) {
-						listItems ++= s"<li>$c</li>"
+						listItems ++= s"<li>${c._2}${c._1}</li>"
 					}
+					document.getElementById("completions").innerHTML = listItems.toString
 					println("autocompletion done")
-					println(listItems.toString)
 				}
 				case Failure(t) => t.printStackTrace
 			}
@@ -59,26 +59,5 @@ object ScalaJSAutocompleter extends JSApp {
 		}
 	}
 
-	def main(): Unit = {
-		println("Initializing (main)...")
-// 		g.require("source-map-support")
-// 		// val exampleCode = """object Test { var x = new java.util.Date; x. }"""
-// 		   val exampleCode = """object Test { var x: Option[String] = None; x. }"""
-// 		val flag = "member"
-// 		val offset = 46 // commencer à compter à partir de 0
-
-// 		try {
-// 			val future = Compiler.autocomplete(exampleCode, flag, offset)
-			
-// 			future onComplete {
-// 				case Success(possibleCompletions) => {
-// 					for (c <- possibleCompletions) println(c)
-// 					println("end")
-// 				}
-// 				case Failure(t) => t.printStackTrace
-// 			}
-// 		} catch {
-// 			case th: Throwable => th.printStackTrace
-// 		}
-	}
+	def main(): Unit = { }
 }

@@ -1,54 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Editor</title>
-  <style type="text/css" media="screen">
-    body {
-        overflow: hidden;
-    }
-
-    #editor {
-        margin: 0;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScalaJS autocompleter demo</title>
+  <link rel="stylesheet" href="js-libs/bootstrap-3.3.6-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <pre id="editor">object Test {
+<!-- -->    var x: Option[String] = None;
+<!-- -->    x.
+<!---->}</pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <ul id="completions"></ul>
+      </div>
+    </div>
+  </div>
 
-<pre id="editor">object Test {
-    var x: Option[String] = None;
-    x.
-}</pre>
-
-<ul id="completions"></ul>
-
+<script src="js-libs/jquery-2.2.4.min.js"></script>
+<script src="js-libs/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="target/scala-2.11/scala-js-presentation-compiler-jsdeps.js"></script>
 <script type="text/javascript" src="target/scala-2.11/scala-js-presentation-compiler-fastopt.js"></script>
 <script src="ace-editor-files/src/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
-	// initialize app
-	var autocompleter = ScalaJSAutocompleter()
-	// set the editor up
-	var editor = ace.edit("editor");
-	editor.setTheme("ace/theme/monokai");
-	editor.session.setMode("ace/mode/scala");
-	editor.commands.addCommand({
-		name: 'autocomplete',
-		bindKey: {win: 'Ctrl-Space', mac: 'Command-Space'},
-		exec: function(editor) {
+  // initialize app
+  var autocompleter = ScalaJSAutocompleter()
+  // set the editor up
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/monokai");
+  editor.session.setMode("ace/mode/scala");
+  editor.commands.addCommand({
+    name: 'autocomplete',
+    bindKey: {win: 'Ctrl-Space', mac: 'Command-Space'},
+    exec: function(editor) {
       if (autocompleter.fileLoader.filesReady) {
-			 var listItems = autocompleter.askAutocompletion(editor);
-			 console.log(listItems);
+        var listItems = autocompleter.askAutocompletion(editor);
       } else {
         console.log("Files are not loaded yet")
       }
-		}
+    }
 });
 
 </script>
