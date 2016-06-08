@@ -118,6 +118,7 @@ class Compiler(loader: Classpath) {
       var inner = new StringWriter
       def write(cbuf: Array[Char], off: Int, len: Int): Unit = {
         inner.append(cbuf, off, off + len + 1)
+        // WARNING : not tested !
         // +1 because end = the index of the character following the last character in the subsequence
         // len is the number of chars to write including the char starting at the off
         // before : inner = inner ++ ByteString.fromArray(cbuf.map(_.toByte), off, len)
