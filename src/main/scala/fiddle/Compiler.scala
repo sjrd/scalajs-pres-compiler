@@ -99,7 +99,6 @@ class Compiler(loader: Classpath) {
 
     val vd = new io.VirtualDirectory("(memory)", None)
     val jCtx = new JavaContext()
-    // val jDirs = loader.getVirtualDirectories.map(new DirectoryClassPath(_, jCtx)).toVector
     val jDirs = loader.getVirtualDirectories match {
       case Some(dirs) => dirs.map(new DirectoryClassPath(_, jCtx)).toVector
       case None => throw JarsNotReadyException("Files from the JARs are not loaded") 
