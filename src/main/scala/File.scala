@@ -22,7 +22,7 @@ class File(pathname: String) {
 
 	def this(uri: File.URI) {
 		this("")
-		println("URI constructor called")
+		println("URI constructor not implemented !")
 	}
 
 	private def removeExtraneousSeparators(path: String) = {
@@ -51,6 +51,7 @@ class File(pathname: String) {
 	def getPath = path
 	
 	def isAbsolute = {
+		// WARNING : would not work on Windows !
 		path startsWith File.separator
 	}
 	
