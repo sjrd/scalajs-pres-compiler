@@ -12,14 +12,14 @@ object Properties extends scala.util.PropertiesTrait {
   protected def pickJarBasedOn = classOf[Global]
   
   /*
-	 * There is a getResourceAsStream in scala.util.PropertiesTrait, which does not work
-	 * with Scala.js. Therefore we override the scalaProps val containing the
-	 * getResourceAsStream call, and simply return an empty java.util.Properties
-	 */
-	override protected lazy val scalaProps: java.util.Properties = {
-  	val props = new java.util.Properties
-  	props.setProperty("version.number", "2.11.7")
-  	props
+   * There is a getResourceAsStream in scala.util.PropertiesTrait, which does not work
+   * with Scala.js. Therefore we override the scalaProps val containing the
+   * getResourceAsStream call, and simply return an empty java.util.Properties
+   */
+  override protected lazy val scalaProps: java.util.Properties = {
+    val props = new java.util.Properties
+    props.setProperty("version.number", "2.11.7")
+    props
   }
 
   // settings based on jar properties, falling back to System prefixed by "scala."
