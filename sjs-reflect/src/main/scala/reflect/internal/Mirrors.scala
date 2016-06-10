@@ -8,7 +8,6 @@ package reflect
 package internal
 
 import Flags._
-import scala.scalajs.js
 
 trait Mirrors extends api.Mirrors {
   thisUniverse: SymbolTable =>
@@ -21,7 +20,6 @@ trait Mirrors extends api.Mirrors {
   trait RootSymbol extends Symbol { def mirror: Mirror }
 
   abstract class RootsBase(rootOwner: Symbol) extends scala.reflect.api.Mirror[Mirrors.this.type] { thisMirror =>
-    assert(!js.isUndefined(rootOwner))
     private[this] var initialized = false
     def isMirrorInitialized = initialized
 
@@ -46,7 +44,6 @@ trait Mirrors extends api.Mirrors {
       val owner =
         if (point > 0) getModuleOrClass(path.toTermName, point)
         else RootClass
-      assert(!js.isUndefined(owner))
       val name = path subName (point + 1, len)
       val sym = owner.info member name
       val result = if (path.isTermName) sym.suchThat(_ hasFlag MODULE) else sym
@@ -277,7 +274,6 @@ trait Mirrors extends api.Mirrors {
 
   abstract class Roots(rootOwner: Symbol) extends RootsBase(rootOwner) { thisMirror =>
 
-    assert(!js.isUndefined(rootOwner))
     // TODO - having these as objects means they elude the attempt to
     // add synchronization in SynchronizedSymbols.  But we should either
     // flip on object overrides or find some other accommodation, because
@@ -326,7 +322,6 @@ trait Mirrors extends api.Mirrors {
     lazy val RootClass = new RootClass
 
     class EmptyPackage extends ModuleSymbol(RootClass, NoPosition, nme.EMPTY_PACKAGE_NAME) with WellKnownSymbol {
-      assert(!js.isUndefined(rootOwner))
       override def isEmptyPackage = true
     }
 
@@ -334,7 +329,6 @@ trait Mirrors extends api.Mirrors {
     lazy val EmptyPackage = new EmptyPackage
 
     class EmptyPackageClass extends PackageClassSymbol(RootClass, NoPosition, tpnme.EMPTY_PACKAGE_NAME) with WellKnownSymbol {
-      assert(!js.isUndefined(rootOwner))
       override def isEffectiveRoot     = true
       override def isEmptyPackageClass = true
       override def sourceModule        = EmptyPackage
