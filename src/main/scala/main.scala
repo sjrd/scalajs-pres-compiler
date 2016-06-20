@@ -48,21 +48,25 @@ object ScalaJSAutocompleter extends JSApp {
 
           var list = document.createElement("ul")
           list.setAttribute("id", "completion-list")
-          list.asInstanceOf[js.Dynamic].style.position = "absolute";
-          list.asInstanceOf[js.Dynamic].style.left = cursorCoords("left") - firstRowCoords("left") + "px";
-          list.asInstanceOf[js.Dynamic].style.top = cursorCoords("top") - firstRowCoords("top") + "px";
+          list.asInstanceOf[js.Dynamic].style.position = "absolute"
+          list.asInstanceOf[js.Dynamic].style.left = cursorCoords("left") - firstRowCoords("left") + "px"
+          list.asInstanceOf[js.Dynamic].style.top = cursorCoords("top") - firstRowCoords("top") + "px"
           list.innerHTML = listItems.toString
 
-          def closeFunction(event: js.Dynamic) {
+          /*
+           * Two important posts from Stackoverflow :
+           * http://stackoverflow.com/a/37253012/1829647 (separate conversions to JS functions => removeEventListener had no effect)
+           * http://stackoverflow.com/a/27245122/1829647 (foward reference / cannot use arguments.callee with Scala.js)
+           */ 
+          lazy val closeFunction: js.Function1[js.Dynamic, Unit] = (event: js.Dynamic) => {
             if (event.keyCode.asInstanceOf[Int] == 27) {
-              firstRow.removeChild(list);
-              document.removeEventListener("keyup", closeFunction _); // this doesn't work, but it works in pure JavaScript
-              // Furthermore, Scala.js does not support arguments.callee, so we can't use that
+              firstRow.removeChild(list)
+              document.removeEventListener("keyup", closeFunction)
             }
           }
 
-          document.addEventListener("keyup", closeFunction _);
-          document.querySelector(".container-fluid .row:first-child").appendChild(list);
+          document.addEventListener("keyup", closeFunction)
+          document.querySelector(".container-fluid .row:first-child").appendChild(list)
           println("autocompletion done")
         }
         case Failure(t) => t.printStackTrace
