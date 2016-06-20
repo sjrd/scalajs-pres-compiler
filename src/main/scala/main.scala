@@ -15,6 +15,10 @@ object ScalaJSAutocompleter extends JSApp {
   @JSExport
   val fileLoader = new Classpath
 
+  // For pop-ups :
+  private var selectedIndex = 0;
+  private var listLength = 0;
+
   def getDocumentCoordinates(element: raw.Element): Map[String, Double] = {
     val boundingRect = element.getBoundingClientRect();
     Map("left" -> (boundingRect.left.asInstanceOf[Double] + window.asInstanceOf[js.Dynamic].scrollX.asInstanceOf[Double]), "top" -> (boundingRect.top.asInstanceOf[Double] + window.asInstanceOf[js.Dynamic].scrollY.asInstanceOf[Double]))
@@ -48,25 +52,43 @@ object ScalaJSAutocompleter extends JSApp {
 
           var list = document.createElement("ul")
           list.setAttribute("id", "completion-list")
+          list.setAttribute("tabindex", "0"); // needed for attaching the eventListener to the ul tag
           list.asInstanceOf[js.Dynamic].style.position = "absolute"
           list.asInstanceOf[js.Dynamic].style.left = cursorCoords("left") - firstRowCoords("left") + "px"
           list.asInstanceOf[js.Dynamic].style.top = cursorCoords("top") - firstRowCoords("top") + "px"
           list.innerHTML = listItems.toString
+
+          listLength = list.childElementCount
+          selectedIndex = 0;
+          list.firstElementChild.classList.add("selected")
 
           /*
            * Two important posts from Stackoverflow :
            * http://stackoverflow.com/a/37253012/1829647 (separate conversions to JS functions => removeEventListener had no effect)
            * http://stackoverflow.com/a/27245122/1829647 (forward reference / cannot use arguments.callee with Scala.js)
            */ 
-          lazy val closeFunction: js.Function1[js.Dynamic, Unit] = (event: js.Dynamic) => {
-            if (event.keyCode.asInstanceOf[Int] == 27) {
+          lazy val popupKeyEvent: js.Function1[js.Dynamic, Any] = (event: js.Dynamic) => {
+            val keyCode = event.keyCode.asInstanceOf[Int]
+            if (keyCode == 27) { // Esc
+              list.removeEventListener("keyup", popupKeyEvent) // can probably be removed now that we attach the event listener to the ul tag, not to document anymore !
               firstRow.removeChild(list)
-              document.removeEventListener("keyup", closeFunction)
+              editor.focus() // this is to put the focus back on the editor after closing the pop-up
+            } else if (keyCode == 38) { // Down arrow
+              var currentlySelected = list.children(selectedIndex);
+              currentlySelected.classList.remove("selected");
+              selectedIndex = (selectedIndex - 1 + listLength) % listLength;
+              list.children(selectedIndex).classList.add("selected");
+            } else if (keyCode == 40) { // Up arrow
+              var currentlySelected = list.children(selectedIndex);
+              currentlySelected.classList.remove("selected");
+              selectedIndex = (selectedIndex + 1) % listLength;
+              list.children(selectedIndex).classList.add("selected");
             }
           }
 
-          document.addEventListener("keyup", closeFunction)
+          list.addEventListener("keyup", popupKeyEvent)
           document.querySelector(".container-fluid .row:first-child").appendChild(list)
+          document.getElementById("completion-list").asInstanceOf[js.Dynamic].focus();
           println("autocompletion done")
         }
         case Failure(t) => t.printStackTrace

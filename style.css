@@ -24,3 +24,7 @@
 #completion-list li:last-child {
   border-bottom: none;  
 }
+
+li.selected {
+  background: orange;
+}
