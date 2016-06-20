@@ -56,7 +56,7 @@ object ScalaJSAutocompleter extends JSApp {
           /*
            * Two important posts from Stackoverflow :
            * http://stackoverflow.com/a/37253012/1829647 (separate conversions to JS functions => removeEventListener had no effect)
-           * http://stackoverflow.com/a/27245122/1829647 (foward reference / cannot use arguments.callee with Scala.js)
+           * http://stackoverflow.com/a/27245122/1829647 (forward reference / cannot use arguments.callee with Scala.js)
            */ 
           lazy val closeFunction: js.Function1[js.Dynamic, Unit] = (event: js.Dynamic) => {
             if (event.keyCode.asInstanceOf[Int] == 27) {
